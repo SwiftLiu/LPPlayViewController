@@ -1,0 +1,6 @@
+framework module Pods_LartPlayer {
+  umbrella header "Pods-LartPlayer-umbrella.h"
+
+  export *
+  module * { export * }
+}

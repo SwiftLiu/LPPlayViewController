@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13173"/>
+        <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="LPProgressBar">
+            <connections>
+                <outlet property="loadingImgView" destination="r8S-DV-r29" id="fUh-ec-FYd"/>
+                <outlet property="loadingImgViewWidthConstraint" destination="ca0-gN-FfK" id="W8V-lg-zjD"/>
+                <outlet property="playingImgView" destination="SWM-Ov-z8R" id="k24-pF-ZUr"/>
+                <outlet property="playingImgViewWidthConstraint" destination="U93-Lj-bW3" id="O9j-Sx-f1z"/>
+                <outlet property="playingLabel" destination="Bc2-jD-mcW" id="h9c-lf-PMy"/>
+                <outlet property="progressView" destination="oAr-EJ-9Ro" id="OUH-da-Fva"/>
+                <outlet property="progressViewLeftConstraint" destination="kIk-qF-qYH" id="0o2-41-HEo"/>
+                <outlet property="progressViewRightConstraint" destination="uTS-I1-mYE" id="EjE-kg-Dhr"/>
+                <outlet property="thumbImgView" destination="pzT-tE-DQt" id="DXu-zN-5Mc"/>
+                <outlet property="totalImgView" destination="sDX-oA-WHE" id="7wv-4N-aUC"/>
+                <outlet property="totalLabel" destination="Uv4-0O-SIG" id="AdC-Id-irr"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="36"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="00:00:00" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Uv4-0O-SIG">
+                    <rect key="frame" x="334" y="13" width="41" height="11"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="9"/>
+                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="00:00:00" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Bc2-jD-mcW">
+                    <rect key="frame" x="0.0" y="13" width="41" height="11"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="9"/>
+                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <view clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oAr-EJ-9Ro" userLabel="Progress">
+                    <rect key="frame" x="56" y="17" width="263" height="2"/>
+                    <subviews>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="sDX-oA-WHE">
+                            <rect key="frame" x="0.0" y="0.0" width="263" height="2"/>
+                            <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                        </imageView>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="r8S-DV-r29">
+                            <rect key="frame" x="0.0" y="0.0" width="200" height="2"/>
+                            <color key="backgroundColor" red="0.70588235294117641" green="0.70588235294117641" blue="0.70588235294117641" alpha="1" colorSpace="calibratedRGB"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="200" id="ca0-gN-FfK"/>
+                            </constraints>
+                        </imageView>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="SWM-Ov-z8R">
+                            <rect key="frame" x="0.0" y="0.0" width="100" height="2"/>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="100" id="U93-Lj-bW3"/>
+                            </constraints>
+                        </imageView>
+                    </subviews>
+                    <constraints>
+                        <constraint firstAttribute="bottom" secondItem="SWM-Ov-z8R" secondAttribute="bottom" id="6vO-qB-WKu"/>
+                        <constraint firstItem="sDX-oA-WHE" firstAttribute="leading" secondItem="oAr-EJ-9Ro" secondAttribute="leading" id="BWn-uk-l3s"/>
+                        <constraint firstItem="r8S-DV-r29" firstAttribute="top" secondItem="oAr-EJ-9Ro" secondAttribute="top" id="HUN-Hn-XYI"/>
+                        <constraint firstAttribute="height" constant="2" id="P8p-Ey-yPW"/>
+                        <constraint firstAttribute="trailing" secondItem="sDX-oA-WHE" secondAttribute="trailing" id="WYg-s5-A8q"/>
+                        <constraint firstItem="SWM-Ov-z8R" firstAttribute="top" secondItem="oAr-EJ-9Ro" secondAttribute="top" id="btK-Gh-5Cm"/>
+                        <constraint firstItem="sDX-oA-WHE" firstAttribute="top" secondItem="oAr-EJ-9Ro" secondAttribute="top" id="e0i-Yk-eru"/>
+                        <constraint firstItem="r8S-DV-r29" firstAttribute="leading" secondItem="oAr-EJ-9Ro" secondAttribute="leading" id="ihd-o9-z73"/>
+                        <constraint firstItem="SWM-Ov-z8R" firstAttribute="leading" secondItem="oAr-EJ-9Ro" secondAttribute="leading" id="k6q-yC-rDu"/>
+                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="1" id="opq-HT-pjY"/>
+                        <constraint firstAttribute="bottom" secondItem="sDX-oA-WHE" secondAttribute="bottom" id="rLE-lA-eRs"/>
+                        <constraint firstAttribute="bottom" secondItem="r8S-DV-r29" secondAttribute="bottom" id="ud6-TJ-K7F"/>
+                    </constraints>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                            <integer key="value" value="1"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </view>
+                <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="LPPlayer_slider" translatesAutoresizingMaskIntoConstraints="NO" id="pzT-tE-DQt">
+                    <rect key="frame" x="148" y="10" width="16" height="16"/>
+                </imageView>
+            </subviews>
+            <constraints>
+                <constraint firstItem="Uv4-0O-SIG" firstAttribute="centerY" secondItem="vUN-kp-3ea" secondAttribute="centerY" id="1dC-96-vZE"/>
+                <constraint firstItem="pzT-tE-DQt" firstAttribute="centerY" secondItem="oAr-EJ-9Ro" secondAttribute="centerY" id="9oP-r7-8fW"/>
+                <constraint firstItem="Uv4-0O-SIG" firstAttribute="trailing" secondItem="vUN-kp-3ea" secondAttribute="trailing" id="LSp-SO-AZ2"/>
+                <constraint firstItem="oAr-EJ-9Ro" firstAttribute="centerY" secondItem="vUN-kp-3ea" secondAttribute="centerY" id="MNA-JV-Ycy"/>
+                <constraint firstItem="Bc2-jD-mcW" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="NGt-gk-OCT"/>
+                <constraint firstItem="Bc2-jD-mcW" firstAttribute="centerY" secondItem="vUN-kp-3ea" secondAttribute="centerY" id="Ujl-eL-67U"/>
+                <constraint firstItem="oAr-EJ-9Ro" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="56" id="kIk-qF-qYH"/>
+                <constraint firstItem="pzT-tE-DQt" firstAttribute="centerX" secondItem="SWM-Ov-z8R" secondAttribute="trailing" id="osf-qH-HB9"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="oAr-EJ-9Ro" secondAttribute="trailing" constant="56" id="uTS-I1-mYE"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <point key="canvasLocation" x="-1154" y="110"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="LPPlayer_slider" width="16" height="16"/>
+    </resources>
+</document>
