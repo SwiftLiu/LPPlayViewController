@@ -1,0 +1,395 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 48;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		AC61C7072004C28800209231 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = AC61C7062004C28800209231 /* AppDelegate.m */; };
+		AC61C70A2004C28800209231 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AC61C7092004C28800209231 /* ViewController.m */; };
+		AC61C70D2004C28800209231 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AC61C70B2004C28800209231 /* Main.storyboard */; };
+		AC61C70F2004C28800209231 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AC61C70E2004C28800209231 /* Assets.xcassets */; };
+		AC61C7122004C28800209231 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AC61C7102004C28800209231 /* LaunchScreen.storyboard */; };
+		AC61C7152004C28800209231 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = AC61C7142004C28800209231 /* main.m */; };
+		AC61C72A2004C2AD00209231 /* LPGestureView.m in Sources */ = {isa = PBXBuildFile; fileRef = AC61C71E2004C2AC00209231 /* LPGestureView.m */; };
+		AC61C72B2004C2AD00209231 /* LPPlayControl.m in Sources */ = {isa = PBXBuildFile; fileRef = AC61C7202004C2AC00209231 /* LPPlayControl.m */; };
+		AC61C72C2004C2AD00209231 /* LPPlayControls.xib in Resources */ = {isa = PBXBuildFile; fileRef = AC61C7222004C2AC00209231 /* LPPlayControls.xib */; };
+		AC61C72D2004C2AD00209231 /* LPPlayer.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AC61C7232004C2AC00209231 /* LPPlayer.xcassets */; };
+		AC61C72E2004C2AD00209231 /* LPPlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AC61C7252004C2AC00209231 /* LPPlayViewController.m */; };
+		AC61C72F2004C2AD00209231 /* LPProgressBar.m in Sources */ = {isa = PBXBuildFile; fileRef = AC61C7282004C2AC00209231 /* LPProgressBar.m */; };
+		AC61C7302004C2AD00209231 /* LPProgressBar.xib in Resources */ = {isa = PBXBuildFile; fileRef = AC61C7292004C2AC00209231 /* LPProgressBar.xib */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		AC61C7022004C28800209231 /* LPPlayViewController.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LPPlayViewController.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		AC61C7052004C28800209231 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		AC61C7062004C28800209231 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		AC61C7082004C28800209231 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		AC61C7092004C28800209231 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		AC61C70C2004C28800209231 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		AC61C70E2004C28800209231 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		AC61C7112004C28800209231 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		AC61C7132004C28800209231 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		AC61C7142004C28800209231 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		AC61C71D2004C2AC00209231 /* LPGestureView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LPGestureView.h; sourceTree = "<group>"; };
+		AC61C71E2004C2AC00209231 /* LPGestureView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LPGestureView.m; sourceTree = "<group>"; };
+		AC61C71F2004C2AC00209231 /* LPPlayControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LPPlayControl.h; sourceTree = "<group>"; };
+		AC61C7202004C2AC00209231 /* LPPlayControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LPPlayControl.m; sourceTree = "<group>"; };
+		AC61C7212004C2AC00209231 /* LPPlayControlDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LPPlayControlDelegate.h; sourceTree = "<group>"; };
+		AC61C7222004C2AC00209231 /* LPPlayControls.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LPPlayControls.xib; sourceTree = "<group>"; };
+		AC61C7232004C2AC00209231 /* LPPlayer.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = LPPlayer.xcassets; sourceTree = "<group>"; };
+		AC61C7242004C2AC00209231 /* LPPlayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LPPlayViewController.h; sourceTree = "<group>"; };
+		AC61C7252004C2AC00209231 /* LPPlayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LPPlayViewController.m; sourceTree = "<group>"; };
+		AC61C7272004C2AC00209231 /* LPProgressBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LPProgressBar.h; sourceTree = "<group>"; };
+		AC61C7282004C2AC00209231 /* LPProgressBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LPProgressBar.m; sourceTree = "<group>"; };
+		AC61C7292004C2AC00209231 /* LPProgressBar.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LPProgressBar.xib; sourceTree = "<group>"; };
+		AC73C7C62005BA1A00F042C7 /* LPPlayHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LPPlayHeader.h; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		AC61C6FF2004C28800209231 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		AC61C6F92004C28800209231 = {
+			isa = PBXGroup;
+			children = (
+				AC61C7042004C28800209231 /* LPPlayViewController */,
+				AC61C7032004C28800209231 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		AC61C7032004C28800209231 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				AC61C7022004C28800209231 /* LPPlayViewController.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		AC61C7042004C28800209231 /* LPPlayViewController */ = {
+			isa = PBXGroup;
+			children = (
+				AC61C71B2004C2AC00209231 /* LPPlayViewController */,
+				AC61C7052004C28800209231 /* AppDelegate.h */,
+				AC61C7062004C28800209231 /* AppDelegate.m */,
+				AC61C7082004C28800209231 /* ViewController.h */,
+				AC61C7092004C28800209231 /* ViewController.m */,
+				AC61C70B2004C28800209231 /* Main.storyboard */,
+				AC61C70E2004C28800209231 /* Assets.xcassets */,
+				AC61C7102004C28800209231 /* LaunchScreen.storyboard */,
+				AC61C7132004C28800209231 /* Info.plist */,
+				AC61C7142004C28800209231 /* main.m */,
+			);
+			path = LPPlayViewController;
+			sourceTree = "<group>";
+		};
+		AC61C71B2004C2AC00209231 /* LPPlayViewController */ = {
+			isa = PBXGroup;
+			children = (
+				AC73C7C62005BA1A00F042C7 /* LPPlayHeader.h */,
+				AC61C7242004C2AC00209231 /* LPPlayViewController.h */,
+				AC61C7252004C2AC00209231 /* LPPlayViewController.m */,
+				AC61C7212004C2AC00209231 /* LPPlayControlDelegate.h */,
+				AC61C71F2004C2AC00209231 /* LPPlayControl.h */,
+				AC61C7202004C2AC00209231 /* LPPlayControl.m */,
+				AC61C7222004C2AC00209231 /* LPPlayControls.xib */,
+				AC61C7232004C2AC00209231 /* LPPlayer.xcassets */,
+				AC61C71C2004C2AC00209231 /* LPGestureView */,
+				AC61C7262004C2AC00209231 /* LPProgressBar */,
+			);
+			path = LPPlayViewController;
+			sourceTree = "<group>";
+		};
+		AC61C71C2004C2AC00209231 /* LPGestureView */ = {
+			isa = PBXGroup;
+			children = (
+				AC61C71D2004C2AC00209231 /* LPGestureView.h */,
+				AC61C71E2004C2AC00209231 /* LPGestureView.m */,
+			);
+			path = LPGestureView;
+			sourceTree = "<group>";
+		};
+		AC61C7262004C2AC00209231 /* LPProgressBar */ = {
+			isa = PBXGroup;
+			children = (
+				AC61C7272004C2AC00209231 /* LPProgressBar.h */,
+				AC61C7282004C2AC00209231 /* LPProgressBar.m */,
+				AC61C7292004C2AC00209231 /* LPProgressBar.xib */,
+			);
+			path = LPProgressBar;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		AC61C7012004C28800209231 /* LPPlayViewController */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AC61C7182004C28800209231 /* Build configuration list for PBXNativeTarget "LPPlayViewController" */;
+			buildPhases = (
+				AC61C6FE2004C28800209231 /* Sources */,
+				AC61C6FF2004C28800209231 /* Frameworks */,
+				AC61C7002004C28800209231 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = LPPlayViewController;
+			productName = LPPlayViewController;
+			productReference = AC61C7022004C28800209231 /* LPPlayViewController.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		AC61C6FA2004C28800209231 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0900;
+				ORGANIZATIONNAME = "iOS_刘平";
+				TargetAttributes = {
+					AC61C7012004C28800209231 = {
+						CreatedOnToolsVersion = 9.0;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = AC61C6FD2004C28800209231 /* Build configuration list for PBXProject "LPPlayViewController" */;
+			compatibilityVersion = "Xcode 8.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = AC61C6F92004C28800209231;
+			productRefGroup = AC61C7032004C28800209231 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				AC61C7012004C28800209231 /* LPPlayViewController */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		AC61C7002004C28800209231 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AC61C7122004C28800209231 /* LaunchScreen.storyboard in Resources */,
+				AC61C72C2004C2AD00209231 /* LPPlayControls.xib in Resources */,
+				AC61C7302004C2AD00209231 /* LPProgressBar.xib in Resources */,
+				AC61C72D2004C2AD00209231 /* LPPlayer.xcassets in Resources */,
+				AC61C70F2004C28800209231 /* Assets.xcassets in Resources */,
+				AC61C70D2004C28800209231 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		AC61C6FE2004C28800209231 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AC61C72A2004C2AD00209231 /* LPGestureView.m in Sources */,
+				AC61C70A2004C28800209231 /* ViewController.m in Sources */,
+				AC61C72F2004C2AD00209231 /* LPProgressBar.m in Sources */,
+				AC61C72E2004C2AD00209231 /* LPPlayViewController.m in Sources */,
+				AC61C7152004C28800209231 /* main.m in Sources */,
+				AC61C7072004C28800209231 /* AppDelegate.m in Sources */,
+				AC61C72B2004C2AD00209231 /* LPPlayControl.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		AC61C70B2004C28800209231 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				AC61C70C2004C28800209231 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		AC61C7102004C28800209231 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				AC61C7112004C28800209231 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		AC61C7162004C28800209231 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		AC61C7172004C28800209231 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		AC61C7192004C28800209231 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = RTN8C9M66P;
+				INFOPLIST_FILE = LPPlayViewController/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = iOSLiu.LPPlayViewController;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		AC61C71A2004C28800209231 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = RTN8C9M66P;
+				INFOPLIST_FILE = LPPlayViewController/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = iOSLiu.LPPlayViewController;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		AC61C6FD2004C28800209231 /* Build configuration list for PBXProject "LPPlayViewController" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AC61C7162004C28800209231 /* Debug */,
+				AC61C7172004C28800209231 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AC61C7182004C28800209231 /* Build configuration list for PBXNativeTarget "LPPlayViewController" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AC61C7192004C28800209231 /* Debug */,
+				AC61C71A2004C28800209231 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = AC61C6FA2004C28800209231 /* Project object */;
+}
