@@ -47,6 +47,8 @@
 ///进度条图
 @property (copy, nonatomic) UIImage *totalImage;
 
+///代理
+@property (weak, nonatomic) id <LPProgressBarDelegate> delegate;
 
 ///正在播放时间（单位：秒）
 @property (assign, nonatomic) NSTimeInterval playingTime;
@@ -56,11 +58,8 @@
 @property (assign, nonatomic) NSTimeInterval totalTime;
 
 
-///代理
-@property (weak, nonatomic) id <LPProgressBarDelegate> delegate;
 ///用户是否正在手动调整进度条
 @property (assign, nonatomic, readonly) BOOL isSliding;
-
 @end
 
 

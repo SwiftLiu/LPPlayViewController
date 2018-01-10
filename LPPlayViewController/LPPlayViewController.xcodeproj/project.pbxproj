@@ -20,6 +20,7 @@
 		AC61C72E2004C2AD00209231 /* LPPlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AC61C7252004C2AC00209231 /* LPPlayViewController.m */; };
 		AC61C72F2004C2AD00209231 /* LPProgressBar.m in Sources */ = {isa = PBXBuildFile; fileRef = AC61C7282004C2AC00209231 /* LPProgressBar.m */; };
 		AC61C7302004C2AD00209231 /* LPProgressBar.xib in Resources */ = {isa = PBXBuildFile; fileRef = AC61C7292004C2AC00209231 /* LPProgressBar.xib */; };
+		AC73C7C92006734500F042C7 /* UIViewController+LPPlayerRotation.m in Sources */ = {isa = PBXBuildFile; fileRef = AC73C7C82006734500F042C7 /* UIViewController+LPPlayerRotation.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -46,6 +47,8 @@
 		AC61C7282004C2AC00209231 /* LPProgressBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LPProgressBar.m; sourceTree = "<group>"; };
 		AC61C7292004C2AC00209231 /* LPProgressBar.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LPProgressBar.xib; sourceTree = "<group>"; };
 		AC73C7C62005BA1A00F042C7 /* LPPlayHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LPPlayHeader.h; sourceTree = "<group>"; };
+		AC73C7C72006734500F042C7 /* UIViewController+LPPlayerRotation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIViewController+LPPlayerRotation.h"; sourceTree = "<group>"; };
+		AC73C7C82006734500F042C7 /* UIViewController+LPPlayerRotation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+LPPlayerRotation.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,6 +101,8 @@
 				AC73C7C62005BA1A00F042C7 /* LPPlayHeader.h */,
 				AC61C7242004C2AC00209231 /* LPPlayViewController.h */,
 				AC61C7252004C2AC00209231 /* LPPlayViewController.m */,
+				AC73C7C72006734500F042C7 /* UIViewController+LPPlayerRotation.h */,
+				AC73C7C82006734500F042C7 /* UIViewController+LPPlayerRotation.m */,
 				AC61C7212004C2AC00209231 /* LPPlayControlDelegate.h */,
 				AC61C71F2004C2AC00209231 /* LPPlayControl.h */,
 				AC61C7202004C2AC00209231 /* LPPlayControl.m */,
@@ -209,6 +214,7 @@
 				AC61C7152004C28800209231 /* main.m in Sources */,
 				AC61C7072004C28800209231 /* AppDelegate.m in Sources */,
 				AC61C72B2004C2AD00209231 /* LPPlayControl.m in Sources */,
+				AC73C7C92006734500F042C7 /* UIViewController+LPPlayerRotation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

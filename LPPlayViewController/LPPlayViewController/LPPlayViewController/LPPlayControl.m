@@ -45,9 +45,7 @@
 
 
 @interface LPPlayControl ()
-{
-    BOOL _barShow;//控制栏是否显示
-}
+
 @end
 
 
@@ -77,7 +75,7 @@
     self.userInteractionEnabled = YES;
     self.clipsToBounds = YES;
     
-    //手势代理
+    //手势层代理
     self.gestureView.delegate = self;
     
     //进度条
@@ -87,22 +85,36 @@
         self.progressBar.thumbImage = [UIImage imageNamed:@"LPPlayer_slider"];
     }
     
-    //默认竖屏模式
-    self.fullScreen = NO;
+    //暂停状态
+    self.playing = NO;
+    
+    //竖屏模式
+    [self becomeFullScreen:NO];
     
     //控制栏默认显示状态
-    _barShow = YES;
+    _barHidden = NO;
 }
 
 
+//播放状态
+- (void)setPlaying:(BOOL)playing {
+    _playing = playing;
+    self.playButton.selected = playing;
+}
 
+//全屏或竖屏模式
+- (void)setFullScreen:(BOOL)fullScreen {
+    if (_fullScreen == fullScreen) { return; }
+    [self autoHideBarIfNeed];
+    _fullScreen = fullScreen;
+    [self becomeFullScreen:fullScreen];
+}
 
 
 
 #pragma mark - ------------------------ 界面布局 --------------------------
 //MARK: 全屏或竖屏模式
-- (void)setFullScreen:(BOOL)fullScreen {
-    _fullScreen = fullScreen;
+- (void)becomeFullScreen:(BOOL)fullScreen {
     if (fullScreen) {
         //全屏布局
         self.rightBar.hidden = NO;
@@ -134,15 +146,28 @@
 
 //MARK: 弹出制栏动画
 - (void)showBarsAnimation {
-    //取消自动隐藏
-    [self cancelAutoHideBar];
     //移除动画
+    [self cancelAutoHideBar];
     [self.rightBar.layer  removeAllAnimations];
     [self.topBar.layer    removeAllAnimations];
     [self.bottomBar.layer removeAllAnimations];
     
-    //动画
+    //动画结束执行
     __weak typeof(self) weakSelf = self;
+    typedef void(^AnimationCompleted)(BOOL);
+    AnimationCompleted handler = ^(BOOL finished) {
+        if (finished) {
+            _barHidden = NO;
+            //延时隐藏控制栏
+            [weakSelf autoHideBarIfNeed];
+            //代理回调
+            if (self.delegate && [self.delegate respondsToSelector:@selector(control:barsDidBeHidden:)]) {
+                [self.delegate control:self barsDidBeHidden:NO];
+            }
+        }
+    };
+    
+    //动画
     if (_fullScreen) {//①全屏模式（弹出动画）
         self.topBar.alpha    = 1;
         self.bottomBar.alpha = 1;
@@ -151,12 +176,7 @@
         [UIView animateWithDuration:ANIMATION_DURATION animations:^{
             [weakSelf layoutIfNeeded];
             weakSelf.rightBar.alpha = 1;
-        } completion:^(BOOL finished) {
-            if (finished) {
-                _barShow = YES;
-                [weakSelf autoHideBar];//自动隐藏
-            }
-        }];
+        } completion:handler];
     }
     else {//②竖屏模式（渐显动画）
         self.topBarTopConstraint.constant = 0;
@@ -165,44 +185,48 @@
             weakSelf.rightBar.alpha  = 1;
             weakSelf.topBar.alpha    = 1;
             weakSelf.bottomBar.alpha = 1;
-        } completion:^(BOOL finished) {
-            if (finished) {
-                _barShow = YES;
-                [weakSelf autoHideBar];//自动隐藏
-            }
-        }];
+        } completion:handler];
     }
     
     //代理回调
-    if (self.delegate && [self.delegate respondsToSelector:@selector(control:barsDidHided:)]) {
-        [self.delegate control:self barsDidHided:NO];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(control:barsWillBeHidden:)]) {
+        [self.delegate control:self barsWillBeHidden:YES];
     }
 }
 
 //MARK: 隐藏控制栏动画
 - (void)hideBarsAnimation {
-    //取消自动隐藏
-    [self cancelAutoHideBar];
     //移除动画
+    [self cancelAutoHideBar];
     [self.rightBar.layer  removeAllAnimations];
     [self.topBar.layer    removeAllAnimations];
     [self.bottomBar.layer removeAllAnimations];
     
-    //动画
+    //动画结束执行
     __weak typeof(self) weakSelf = self;
+    typedef void(^AnimationCompleted)(BOOL);
+    AnimationCompleted handler = ^(BOOL finished) {
+        if (finished) {
+            _barHidden = YES;
+            //延时隐藏控制栏
+            [weakSelf autoHideBarIfNeed];
+            //代理回调
+            if (self.delegate && [self.delegate respondsToSelector:@selector(control:barsDidBeHidden:)]) {
+                [self.delegate control:self barsDidBeHidden:YES];
+            }
+        }
+    };
+    
+    //动画
     if (_fullScreen) {//①全屏模式（弹出动画）
         self.topBar.alpha    = 1;
         self.bottomBar.alpha = 1;
         self.topBarTopConstraint.constant = -self.topBar.bounds.size.height;
         self.bottomBarBottomConstraint.constant = self.bottomBar.bounds.size.height;
-        [UIView animateWithDuration:ANIMATION_DURATION animations:^{
+        [UIView animateWithDuration:ANIMATION_DURATION+.2f animations:^{
             [weakSelf layoutIfNeeded];
             weakSelf.rightBar.alpha = 0;
-        } completion:^(BOOL finished) {
-            if (finished) {
-                _barShow = NO;
-            }
-        }];
+        } completion:handler];
     }
     else {//②竖屏模式（渐隐动画）
         self.topBarTopConstraint.constant = 0;
@@ -211,26 +235,24 @@
             weakSelf.rightBar.alpha  = 0;
             weakSelf.topBar.alpha    = 0;
             weakSelf.bottomBar.alpha = 0;
-        } completion:^(BOOL finished) {
-            if (finished) {
-                _barShow = NO;
-            }
-        }];
+        } completion:handler];
     }
     
     //代理回调
-    if (self.delegate && [self.delegate respondsToSelector:@selector(control:barsDidHided:)]) {
-        [self.delegate control:self barsDidHided:YES];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(control:barsWillBeHidden:)]) {
+        [self.delegate control:self barsWillBeHidden:YES];
     }
 }
 
-//自动隐藏
-- (void)autoHideBar {
-    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(hideBarsAnimation) object:nil];
-    [self performSelector:@selector(hideBarsAnimation) withObject:nil afterDelay:5];
+//延时隐藏控制栏
+- (void)autoHideBarIfNeed {
+    if (!_barHidden) {
+        [self cancelAutoHideBar];
+        [self performSelector:@selector(hideBarsAnimation) withObject:nil afterDelay:5];
+    }
 }
 
-//取消自动隐藏
+//取消延时隐藏控制栏
 - (void)cancelAutoHideBar {
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(hideBarsAnimation) object:nil];
 }
@@ -239,16 +261,26 @@
 
 
 
-
 #pragma mark - ------------------------ 用户交互 --------------------------
 //MARK: 点击播放暂停按钮
 - (IBAction)playButtonPressed:(UIButton *)sender {
-    
+    //延时隐藏控制栏
+    [self autoHideBarIfNeed];
+    //播放状态
+    self.playing = !sender.selected;
+    //代理
+    if (self.delegate && [self.delegate respondsToSelector:@selector(control:didClickedPlayButtonWillPlaying:)]) {
+        [self.delegate control:self didClickedPlayButtonWillPlaying:self.isPlaying];
+    }
 }
 
 //MARK: 点击全屏按钮
 - (IBAction)fullScreenButtonPressed:(UIButton *)sender {
+    //延时隐藏控制栏
+    [self autoHideBarIfNeed];
+    //全屏
     self.fullScreen = YES;
+    //代理
     if (self.delegate && [self.delegate respondsToSelector:@selector(control:didClickedFullScreenButton:)]) {
         [self.delegate control:self didClickedFullScreenButton:YES];
     }
@@ -256,37 +288,56 @@
 
 //MARK: 点击选集按钮
 - (IBAction)episodeButtonPressed:(UIButton *)sender {
-    
+    //隐藏控制栏
+    [self hideBarsAnimation];
+    //弹出选集框
+    //MARK: NeedDo <<<<<<<<<<<<<<<<<<<<<<<<< 1 >>>>>>>>>>>>>>>>>>>>>>>>>
 }
 
 //MARK: 点击清晰度按钮
 - (IBAction)clarityButtonPressed:(UIButton *)sender {
-    
+    //隐藏控制栏
+    [self hideBarsAnimation];
+    //弹出清晰度选择框
+    //MARK: NeedDo <<<<<<<<<<<<<<<<<<<<<<<<< 2 >>>>>>>>>>>>>>>>>>>>>>>>>
+}
+
+//MARK: 全屏时点击返回按钮
+- (IBAction)portraitScreenButtonPressed:(UIButton *)sender {
+    //延时隐藏控制栏
+    [self autoHideBarIfNeed];
+    //全屏时变为竖屏
+    self.fullScreen = NO;
+    //代理
+    if (self.delegate && [self.delegate respondsToSelector:@selector(control:didClickedFullScreenButton:)]) {
+        [self.delegate control:self didClickedFullScreenButton:NO];
+    }
 }
 
 //MARK: 点击返回按钮
-- (IBAction)portraitScreenButtonPressed:(UIButton *)sender {
-    if (self.fullScreen) {
-        //全屏时变为竖屏
-        self.fullScreen = NO;
-        if (self.delegate && [self.delegate respondsToSelector:@selector(control:didClickedFullScreenButton:)]) {
-            [self.delegate control:self didClickedFullScreenButton:NO];
-        }
-    }
-    else {
-        //竖屏时返回
-        if (self.delegate && [self.delegate respondsToSelector:@selector(controlDidClickedBackButton:)]) {
-            [self.delegate controlDidClickedBackButton:self];
-        }
+- (IBAction)backButtonPressed:(UIButton *)sender {
+    //取消延时隐藏控制栏
+    [self cancelAutoHideBar];
+    //代理
+    if (self.delegate && [self.delegate respondsToSelector:@selector(controlDidClickedBackButton:)]) {
+        [self.delegate controlDidClickedBackButton:self];
     }
 }
 
 //MARK: 点击顶部右边第一个按钮
 - (IBAction)firstTopButtonPressed:(UIButton *)sender {
+    //延时隐藏控制栏
+    [self autoHideBarIfNeed];
+    //弹出菜单框
+    //MARK: NeedDo <<<<<<<<<<<<<<<<<<<<<<<<< 3 >>>>>>>>>>>>>>>>>>>>>>>>>
 }
 
 //MARK: 点击顶部右边第二个按钮
 - (IBAction)secondTopButtonPressed:(UIButton *)sender {
+    //延时隐藏控制栏
+    [self autoHideBarIfNeed];
+    //弹出分享框
+    //MARK: NeedDo <<<<<<<<<<<<<<<<<<<<<<<<< 4 >>>>>>>>>>>>>>>>>>>>>>>>>
 }
 
 
@@ -309,10 +360,10 @@
 
 #pragma mark - <LPGestureViewDelegate>协议实现
 - (void)gestureViewDidSigleTap:(LPGestureView *)view {
-    if (_barShow) {
-        [self hideBarsAnimation];
-    }else {
+    if (_barHidden) {
         [self showBarsAnimation];
+    }else {
+        [self hideBarsAnimation];
     }
 }
 

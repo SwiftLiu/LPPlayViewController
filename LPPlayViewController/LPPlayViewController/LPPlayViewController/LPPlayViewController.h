@@ -37,7 +37,7 @@
 @property (assign, nonatomic) BOOL autoFullScreen;
 
 ///当前是否为全屏模式（默认为NO）
-@property (assign, nonatomic, readonly) BOOL fullScreen;
+@property (assign, nonatomic, readonly) BOOL isFullScreen;
 
 /** 便利初始化 */
 + (instancetype)viewControllerWithStyle:(LPPlayStyle)style;

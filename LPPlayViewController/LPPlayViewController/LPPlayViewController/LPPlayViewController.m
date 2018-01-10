@@ -8,11 +8,19 @@
 
 #import "LPPlayViewController.h"
 #import "LPPlayControl.h"
-
+#import "UIViewController+LPPlayerRotation.h"
 
 @interface LPPlayViewController ()<LPPlayControlDelegate>
 @property (strong, nonatomic) LPPlayControl *control;
 @end
+
+@interface LPPlayViewController ()
+@property (assign, nonatomic, readonly) UIStatusBarStyle statusBarStyle;//状态栏初始风格
+@property (assign, nonatomic, readonly) BOOL statusBarHidden;//状态栏初始状态
+@property (assign, nonatomic, readonly) UIDeviceOrientation orientation;//屏幕方向
+@end
+
+
 
 @implementation LPPlayViewController
 
@@ -27,6 +35,15 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor blackColor];
+    
+    //设备默认方向
+    _orientation = UIDeviceOrientationPortrait;
+    //状态栏初始风格
+    _statusBarStyle = [UIApplication sharedApplication].statusBarStyle;
+    _statusBarHidden = [UIApplication sharedApplication].statusBarHidden;
+    
+    //开始监听转屏
+    [self addNotifications];
 }
 
 - (void)viewDidLayoutSubviews {
@@ -35,42 +52,120 @@
 }
 
 
+- (void)dealloc {
+    // 移除通知
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    //停止监测设备方向
+    [[UIDevice currentDevice] endGeneratingDeviceOrientationNotifications];
+    //销毁控制层
+    [self.control removeFromSuperview];
+    self.control = nil;
+}
+
+
+
+
+#pragma mark - ------------------------ 转屏相关 --------------------------
+//MARK: 开始监听设备方向旋转
+- (void)addNotifications {
+    [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];//监测设备方向
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onDeviceOrientationChange) name:UIDeviceOrientationDidChangeNotification object:nil];
+}
+
+//MARK: 设备方向改变时
+- (void)onDeviceOrientationChange {
+    UIDeviceOrientation deviceOri = [UIDevice currentDevice].orientation;//设备方向
+    if (_orientation == deviceOri) { return; }
+    if (UIDeviceOrientationIsLandscape(deviceOri)) {
+        _orientation = deviceOri;
+        [self beFullScreenToLeft:deviceOri==UIDeviceOrientationLandscapeLeft];//横屏
+        self.control.fullScreen = YES;
+    }
+    else if (UIDeviceOrientationIsPortrait(deviceOri) && !UIDeviceOrientationIsPortrait(_orientation)) {
+        _orientation = deviceOri;
+        [self bePortraitScreen];//竖屏
+        self.control.fullScreen = NO;
+    }
+}
+
+//MARK: 全屏
+- (void)beFullScreenToLeft:(BOOL)left {
+    //状态栏
+    UIApplication *application = [UIApplication sharedApplication];
+    if (left) {
+        [application setStatusBarOrientation:UIInterfaceOrientationLandscapeRight animated:YES];
+    }else {
+        [application setStatusBarOrientation:UIInterfaceOrientationLandscapeLeft animated:YES];
+    }
+    [application setStatusBarStyle:(UIStatusBarStyleLightContent) animated:YES];
+    [application setStatusBarHidden:self.control.barHidden animated:YES];
+    
+    //控制层和渲染层移动到App主window上
+    [self.control removeFromSuperview];
+    __weak UIWindow *window = [[UIApplication sharedApplication] keyWindow];
+    UIView *bgView = [[UIView alloc] initWithFrame:window.bounds];
+    bgView.backgroundColor = [UIColor blackColor];
+    [bgView addSubview:self.control];
+    [window addSubview:bgView];
+    
+    //动画
+    __weak typeof(self) weakSelf = self;
+    [UIView animateWithDuration:ANIMATION_DURATION animations:^{
+        weakSelf.control.transform = CGAffineTransformMakeRotation(left?M_PI_2:-M_PI_2);
+    } completion:^(BOOL finished) {
+        if (finished) {
+            _isFullScreen = YES;
+        }
+    }];
+}
+
+//MARK: 竖直屏幕
+- (void)bePortraitScreen {
+    //状态栏
+    UIApplication *application = [UIApplication sharedApplication];
+    [application setStatusBarOrientation:UIInterfaceOrientationPortrait animated:NO];
+    [application setStatusBarStyle:self.statusBarStyle animated:YES];
+    [application setStatusBarHidden:self.statusBarHidden animated:YES];
+    
+    //控制层和渲染层移动到根视图self.view上
+    UIView *bgView = self.control.superview;
+    if (bgView == self.view) { return; }
+    [self.control removeFromSuperview];
+    [bgView removeFromSuperview];
+    [self.view addSubview:self.control];
+    
+    //动画
+    __weak typeof(self) weakSelf = self;
+    [UIView animateWithDuration:ANIMATION_DURATION animations:^{
+        weakSelf.control.transform = CGAffineTransformMakeRotation(0);
+    } completion:^(BOOL finished) {
+        if (finished) {
+            _isFullScreen = NO;
+        }
+    }];
+}
+
 
 
 
 #pragma mark - <LPPlayControlDelegate>协议实现
 - (void)control:(LPPlayControl *)control didClickedFullScreenButton:(BOOL)fullScreen {
     if (fullScreen) {//全屏
-        //移动到App主window上
-        [self.control removeFromSuperview];
-        __weak UIWindow *window = [[UIApplication sharedApplication] keyWindow];
-        [window addSubview:self.control];
-        CGSize size = window.bounds.size;
-        self.control.frame = CGRectMake(0, 0, size.height, size.width);
-        self.control.center = CGPointMake(size.width/2.0f, size.height/2.0f);
-        
-        
-        //动画
-        __weak typeof(self) weakSelf = self;
-        [UIView animateWithDuration:ANIMATION_DURATION animations:^{
-            weakSelf.control.transform = CGAffineTransformMakeRotation(M_PI_2);
-        } completion:^(BOOL finished) {
-            _fullScreen = YES;
-        }];
+        [self beFullScreenToLeft:YES];
+    } else {//竖屏
+        [self bePortraitScreen];
     }
-    else {//竖屏
-        //移动到根视图self.view上
-        [self.control removeFromSuperview];
-        [self.view addSubview:self.control];
-        
-        //动画
-        __weak typeof(self) weakSelf = self;
-        [UIView animateWithDuration:ANIMATION_DURATION animations:^{
-            weakSelf.control.transform = CGAffineTransformMakeRotation(0);
-        } completion:^(BOOL finished) {
-            _fullScreen = NO;
-        }];
-        self.control.frame = self.view.bounds;
+}
+
+- (void)control:(LPPlayControl *)control barsWillBeHidden:(BOOL)hidden {
+    if (self.isFullScreen && hidden) {
+        [[UIApplication sharedApplication] setStatusBarHidden:hidden animated:YES];
+    }
+}
+
+- (void)control:(LPPlayControl *)control barsDidBeHidden:(BOOL)hidden {
+    if (self.isFullScreen && !hidden) {
+        [[UIApplication sharedApplication] setStatusBarHidden:hidden animated:YES];
     }
 }
 

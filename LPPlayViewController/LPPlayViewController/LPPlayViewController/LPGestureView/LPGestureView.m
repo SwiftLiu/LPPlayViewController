@@ -45,6 +45,9 @@
     [doubleTap addTarget:self action:@selector(doubleClicked:)];
     [self addGestureRecognizer:doubleTap];
     
+    //优先双击手势
+    [sigleTap requireGestureRecognizerToFail:doubleTap];
+    
     //滑动、拖拽
     UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] init];
     [pan addTarget:self action:@selector(pan:)];

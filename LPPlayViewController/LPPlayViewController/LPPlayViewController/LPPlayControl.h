@@ -15,8 +15,14 @@
 @interface LPPlayControl : UIView
 ///代理
 @property (weak, nonatomic) id <LPPlayControlDelegate> delegate;
-///全屏
-@property (assign, nonatomic) BOOL fullScreen;
+///全屏（默认为NO）
+@property (assign, nonatomic, getter=isFullScreen) BOOL fullScreen;
+///播放状态（默认为NO）
+@property (assign, nonatomic, getter=isPlaying) BOOL playing;
+
+
+///控制栏是否隐藏（默认为NO）
+@property (assign, nonatomic, readonly) BOOL barHidden;
 
 /** 初始化 */
 + (instancetype)controlViewWithStyle:(LPPlayStyle)style;

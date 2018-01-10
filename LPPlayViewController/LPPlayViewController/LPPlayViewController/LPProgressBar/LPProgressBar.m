@@ -26,6 +26,16 @@
 
 @end
 
+@interface LPProgressBar ()
+{
+    CGFloat beganTouchX;//开始触摸点的横坐标
+}
+@end
+
+
+
+
+
 @implementation LPProgressBar
 #pragma mark - ------------------------ 重写 --------------------------
 - (void)awakeFromNib {
@@ -155,13 +165,17 @@
     CGFloat x = [touches.anyObject locationInView:self].x;
     CGRect rect = self.progressView.frame;
     if (x>CGRectGetMinX(rect)-15 && x<CGRectGetMaxX(rect)+15) {
-        _isSliding = YES;
+        beganTouchX = x;
     }
 }
 
 - (void)touchesMoved:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    CGFloat x = [touches.anyObject locationInView:self.progressView].x;
+    if (beganTouchX > 0 && x-beganTouchX > 5) {
+        _isSliding = YES;
+        beganTouchX = 0;
+    }
     if (_isSliding) {
-        CGFloat x = [touches.anyObject locationInView:self.progressView].x;
         CGFloat width = self.progressView.bounds.size.width;
         x = MIN(x, width);
         x = MAX(x, 0);

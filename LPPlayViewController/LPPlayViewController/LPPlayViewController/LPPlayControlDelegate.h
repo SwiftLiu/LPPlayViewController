@@ -17,7 +17,7 @@
 /** 点击返回按钮 */
 - (void)controlDidClickedBackButton:(LPPlayControl *)control;
 /** 点击播放按钮 */
-- (void)control:(LPPlayControl *)control didClickedPlayButtonIsPaused:(BOOL)isPaused;
+- (void)control:(LPPlayControl *)control didClickedPlayButtonWillPlaying:(BOOL)playing;
 /** 点击全屏按钮时 */
 - (void)control:(LPPlayControl *)control didClickedFullScreenButton:(BOOL)fullScreen;
 /** 选中播放源时 */
@@ -34,8 +34,10 @@
 - (void)control:(LPPlayControl *)control didClickedLockButton:(BOOL)locked;
 /** 选中某一集时 */
 - (void)control:(LPPlayControl *)control didSelectedSetAtIndex:(NSInteger)index;
-/** 全屏模式时控制栏显示和隐藏切换 */
-- (void)control:(LPPlayControl *)control barsDidHided:(BOOL)hidden;
+/** 控制栏即将显示和隐藏 */
+- (void)control:(LPPlayControl *)control barsWillBeHidden:(BOOL)hidden;
+/** 控制栏完成显示和隐藏 */
+- (void)control:(LPPlayControl *)control barsDidBeHidden:(BOOL)hidden;
 @end
 
 
