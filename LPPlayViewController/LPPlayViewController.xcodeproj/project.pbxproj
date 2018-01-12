@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A28379CF745CB33A6647CD5E /* Pods_LPPlayViewController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CF11E58CE2B2B056EADD2862 /* Pods_LPPlayViewController.framework */; };
 		AC61C7072004C28800209231 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = AC61C7062004C28800209231 /* AppDelegate.m */; };
 		AC61C70A2004C28800209231 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AC61C7092004C28800209231 /* ViewController.m */; };
 		AC61C70D2004C28800209231 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AC61C70B2004C28800209231 /* Main.storyboard */; };
@@ -24,6 +25,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		24C55E8DD843D0F61A9604E2 /* Pods-LPPlayViewController.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LPPlayViewController.debug.xcconfig"; path = "Pods/Target Support Files/Pods-LPPlayViewController/Pods-LPPlayViewController.debug.xcconfig"; sourceTree = "<group>"; };
+		6A4228F84EB3E61031A4C71A /* Pods-LPPlayViewController.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LPPlayViewController.release.xcconfig"; path = "Pods/Target Support Files/Pods-LPPlayViewController/Pods-LPPlayViewController.release.xcconfig"; sourceTree = "<group>"; };
 		AC61C7022004C28800209231 /* LPPlayViewController.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LPPlayViewController.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AC61C7052004C28800209231 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		AC61C7062004C28800209231 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -49,6 +52,7 @@
 		AC73C7C62005BA1A00F042C7 /* LPPlayHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LPPlayHeader.h; sourceTree = "<group>"; };
 		AC73C7C72006734500F042C7 /* UIViewController+LPPlayerRotation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIViewController+LPPlayerRotation.h"; sourceTree = "<group>"; };
 		AC73C7C82006734500F042C7 /* UIViewController+LPPlayerRotation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+LPPlayerRotation.m"; sourceTree = "<group>"; };
+		CF11E58CE2B2B056EADD2862 /* Pods_LPPlayViewController.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_LPPlayViewController.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,17 +60,28 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A28379CF745CB33A6647CD5E /* Pods_LPPlayViewController.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		247C398FD334F0D33746809F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				CF11E58CE2B2B056EADD2862 /* Pods_LPPlayViewController.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		AC61C6F92004C28800209231 = {
 			isa = PBXGroup;
 			children = (
 				AC61C7042004C28800209231 /* LPPlayViewController */,
 				AC61C7032004C28800209231 /* Products */,
+				B4FCE16AA1072280E94E9E8E /* Pods */,
+				247C398FD334F0D33746809F /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -133,6 +148,15 @@
 			path = LPProgressBar;
 			sourceTree = "<group>";
 		};
+		B4FCE16AA1072280E94E9E8E /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				24C55E8DD843D0F61A9604E2 /* Pods-LPPlayViewController.debug.xcconfig */,
+				6A4228F84EB3E61031A4C71A /* Pods-LPPlayViewController.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -140,9 +164,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = AC61C7182004C28800209231 /* Build configuration list for PBXNativeTarget "LPPlayViewController" */;
 			buildPhases = (
+				95EC7CCC9735F7440113C620 /* [CP] Check Pods Manifest.lock */,
 				AC61C6FE2004C28800209231 /* Sources */,
 				AC61C6FF2004C28800209231 /* Frameworks */,
 				AC61C7002004C28800209231 /* Resources */,
+				B4EE3009B92BEF950BE08EEF /* [CP] Embed Pods Frameworks */,
+				5F6228D97D4AE0E3FD470663 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -201,6 +228,54 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		5F6228D97D4AE0E3FD470663 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-LPPlayViewController/Pods-LPPlayViewController-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		95EC7CCC9735F7440113C620 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		B4EE3009B92BEF950BE08EEF /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-LPPlayViewController/Pods-LPPlayViewController-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		AC61C6FE2004C28800209231 /* Sources */ = {
@@ -346,6 +421,7 @@
 		};
 		AC61C7192004C28800209231 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 24C55E8DD843D0F61A9604E2 /* Pods-LPPlayViewController.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -365,6 +441,7 @@
 		};
 		AC61C71A2004C28800209231 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6A4228F84EB3E61031A4C71A /* Pods-LPPlayViewController.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;

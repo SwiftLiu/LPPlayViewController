@@ -25,7 +25,7 @@
 /** 选集数 */
 - (NSInteger)numberOfSetsInPlayController:(LPPlayViewController *)playController;
 /** 选集item */
-//- (uicollection)numberOfSetsInPlayController:(LPPlayViewController *)playController;
+- (UICollectionViewCell *)playController:(LPPlayViewController *)playController cellForItemAtIndex:(NSInteger)index;
 @end
 
 
