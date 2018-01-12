@@ -47,7 +47,12 @@
 
 + (instancetype)playControllerWithStyle:(LPPlayStyle)style {
     LPPlayViewController *vc = [[LPPlayViewController alloc] init];
+    //默认设置
     [vc setStyle:style];
+    //默认转屏模式
+    vc.autoFullScreen = YES;
+    //默认选中选集
+    vc.selectedSetIndex = 0;
     return vc;
 }
 
@@ -58,7 +63,6 @@
     self.control = [LPPlayControl controlViewWithStyle:(style)];
     [self.view addSubview:self.control];
     self.control.delegate = self;
-    self.control.totalTime = 2000;
     
     //播放器
     PLPlayerOption *option = [PLPlayerOption defaultOption];
@@ -73,16 +77,14 @@
     self.player.backgroundPlayEnable = YES;
     if (self.player.status == PLPlayerStatusError) { return; }
     UIView *playerView = self.player.playerView;
-    if (!playerView.superview) {
-        playerView.contentMode = UIViewContentModeScaleAspectFit;
-        playerView.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin
-        | UIViewAutoresizingFlexibleTopMargin
-        | UIViewAutoresizingFlexibleLeftMargin
-        | UIViewAutoresizingFlexibleRightMargin
-        | UIViewAutoresizingFlexibleWidth
-        | UIViewAutoresizingFlexibleHeight;
-        [self.control insertSubview:playerView atIndex:0];
-    }
+    playerView.contentMode = UIViewContentModeScaleAspectFit;
+    playerView.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin
+    | UIViewAutoresizingFlexibleTopMargin
+    | UIViewAutoresizingFlexibleLeftMargin
+    | UIViewAutoresizingFlexibleRightMargin
+    | UIViewAutoresizingFlexibleWidth
+    | UIViewAutoresizingFlexibleHeight;
+    [self.control insertSubview:playerView atIndex:0];
 }
 
 
@@ -98,9 +100,6 @@
     _statusBarOriginHidden = [UIApplication sharedApplication].statusBarHidden;
     //屏幕初始亮度
     _screenOriginBrightness = [UIScreen mainScreen].brightness;
-    
-    //开始监听转屏
-    [self addNotifications];
 }
 
 - (void)viewDidLayoutSubviews {
@@ -125,15 +124,52 @@
     return _fullScreenBgView;
 }
 
+- (void)setAutoFullScreen:(BOOL)autoFullScreen {
+    if (_autoFullScreen == autoFullScreen) { return; }
+    _autoFullScreen = autoFullScreen;
+    if (autoFullScreen) {
+        //开始监测设备方向
+        [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onDeviceOrientationChange) name:UIDeviceOrientationDidChangeNotification object:nil];
+    }else {
+        //停止监测设备方向
+        [[UIDevice currentDevice] endGeneratingDeviceOrientationNotifications];
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:UIDeviceOrientationDidChangeNotification object:nil];
+        [self becomePortraitScreen];
+    }
+}
 
-#pragma mark - ------------------------ 外部方法 --------------------------
-//MARK: 刷新播放器
-- (void)reloadData {
+- (void)setDelegate:(id<LPPlayViewControllerDelegate>)delegate {
+    _delegate = delegate;
+    self.selectedSetIndex = _selectedSetIndex;
+}
+
+
+//MARK: 播放选集
+- (void)setSelectedSetIndex:(NSInteger)selectedSetIndex {
     if (!self.delegate) { return; }
+    _selectedSetIndex = selectedSetIndex;
     //清晰度
     self.control.clarityNames = [self.delegate claritiesInPlayController:self];
     //播放地址
-    NSString *url = [self.delegate playController:self urlOfClarityAtIndex:self.control.selectedClarityIndex];
+    [self playUrlAtSet:selectedSetIndex];
+}
+
+
+//MARK: 设置http header referer 值
+- (void)setReferer:(NSString *)referer {
+    self.player.referer = referer;
+}
+
+
+
+
+
+#pragma mark - ------------------------ 播放器 --------------------------
+//MARK: 播放新视频
+- (void)playUrlAtSet:(NSInteger)set {
+    NSInteger index = self.control.selectedClarityIndex;
+    NSString *url = [self.delegate playController:self urlWitClarityIndex:index setIndex:set];
     if ([_url isEqualToString:url]) { return; }
     _url = url;
     NSURL *URL = [NSURL URLWithString:url?:@""];
@@ -142,14 +178,7 @@
 
 
 
-
 #pragma mark - ------------------------ 转屏相关 --------------------------
-//MARK: 开始监听设备方向旋转
-- (void)addNotifications {
-    [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];//监测设备方向
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onDeviceOrientationChange) name:UIDeviceOrientationDidChangeNotification object:nil];
-}
-
 //MARK: 设备方向改变时
 - (void)onDeviceOrientationChange {
     UIDeviceOrientation deviceOri = [UIDevice currentDevice].orientation;//设备方向
@@ -229,7 +258,14 @@
 
 
 #pragma mark - <PLPlayerDelegate>协议实现
-
+- (void)player:(PLPlayer *)player statusDidChange:(PLPlayerStatus)state {
+    if (state == PLPlayerStatusPlaying) {
+        self.control.playing = YES;
+    }
+    else if (state == PLPlayerStatusPaused) {
+        self.control.playing = NO;
+    }
+}
 
 
 
@@ -260,6 +296,10 @@
     if (self.delegate && [self.delegate respondsToSelector:@selector(playControllerDidClickedBackButton:)]) {
         [self.delegate playControllerDidClickedBackButton:self];
     }
+}
+
+- (void)control:(LPPlayControl *)control didSelectedSourceAtIndex:(NSInteger)index {
+    [self playUrlAtSet:self.selectedSetIndex];
 }
 
 @end

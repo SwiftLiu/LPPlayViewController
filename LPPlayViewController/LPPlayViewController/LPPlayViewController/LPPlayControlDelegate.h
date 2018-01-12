@@ -20,8 +20,6 @@
 - (void)control:(LPPlayControl *)control didClickedPlayButtonWillPlaying:(BOOL)playing;
 /** 点击全屏按钮时 */
 - (void)control:(LPPlayControl *)control didClickedFullScreenButton:(BOOL)fullScreen;
-/** 选中播放源时 */
-- (void)control:(LPPlayControl *)control didSelectedSourceAtIndex:(NSInteger)index;
 /** 点击提示时的按钮 */
 - (void)controlDidClickedAlertButton:(LPPlayControl *)control;
 /** 快进到指定播放时间 */
@@ -32,6 +30,8 @@
 - (void)control:(LPPlayControl *)control brightnessDidChangedToValue:(CGFloat)value;
 /** 点击锁屏按钮时 */
 - (void)control:(LPPlayControl *)control didClickedLockButton:(BOOL)locked;
+/** 选中清晰度播放源时 */
+- (void)control:(LPPlayControl *)control didSelectedSourceAtIndex:(NSInteger)index;
 /** 选中某一集时 */
 - (void)control:(LPPlayControl *)control didSelectedSetAtIndex:(NSInteger)index;
 /** 控制栏即将显示和隐藏 */

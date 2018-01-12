@@ -13,19 +13,19 @@
 /** 代理 */
 @class LPPlayViewController;
 @protocol LPPlayViewControllerDelegate <NSObject>
-@optional
-/** 点击返回按钮时 */
-- (void)playControllerDidClickedBackButton:(LPPlayViewController *)playController;
-
 @required
 /** 清晰度名称 */
 - (NSArray<NSString*> *)claritiesInPlayController:(LPPlayViewController *)playController;
-/** 各清晰度资源地址 */
-- (NSString *)playController:(LPPlayViewController *)playController urlOfClarityAtIndex:(NSInteger)index;
+/** 资源地址 */
+- (NSString *)playController:(LPPlayViewController *)playController urlWitClarityIndex:(NSInteger)index setIndex:(NSInteger)set;
 /** 选集数 */
 - (NSInteger)numberOfSetsInPlayController:(LPPlayViewController *)playController;
 /** 选集item */
 - (UICollectionViewCell *)playController:(LPPlayViewController *)playController cellForItemAtIndex:(NSInteger)index;
+
+@optional
+/** 点击返回按钮时 */
+- (void)playControllerDidClickedBackButton:(LPPlayViewController *)playController;
 @end
 
 
@@ -39,6 +39,10 @@
 @property (weak, nonatomic) id <LPPlayViewControllerDelegate> delegate;
 ///设备旋转时是否允许自动全屏（默认为YES）
 @property (assign, nonatomic) BOOL autoFullScreen;
+///播放的选集索引
+@property (assign, nonatomic) NSInteger selectedSetIndex;
+///播放请求时http header referer 值
+@property (copy, nonatomic) NSString *referer;
 
 
 ///当前播放的网络视频地址

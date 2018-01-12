@@ -9,7 +9,7 @@
 #import "ViewController.h"
 #import "LPPlayViewController.h"
 
-@interface ViewController ()
+@interface ViewController ()<LPPlayViewControllerDelegate>
 
 @end
 
@@ -22,7 +22,18 @@
     [self addChildViewController:pvc];
     pvc.view.frame = CGRectMake(0, 20, self.view.bounds.size.width, 220);
     [self.view addSubview:pvc.view];
+    
+    pvc.autoFullScreen = NO;
+    pvc.delegate = self;
 }
 
+#pragma mark - <LPPlayViewControllerDelegate>协议实现
+- (NSArray<NSString *> *)claritiesInPlayController:(LPPlayViewController *)playController {
+    return @[@"高清"];
+}
+
+- (NSString *)playController:(LPPlayViewController *)playController urlWitClarityIndex:(NSInteger)index setIndex:(NSInteger)set {
+    return @"http://www.w3school.com.cn/example/html5/mov_bbb.mp4";
+}
 
 @end
