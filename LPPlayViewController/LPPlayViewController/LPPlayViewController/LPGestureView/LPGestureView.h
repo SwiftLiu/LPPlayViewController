@@ -29,8 +29,13 @@ typedef NS_ENUM(NSInteger, LPPanDirection) {
 - (void)gestureViewDidSigleTap:(LPGestureView *)view;
 /** 双击 */
 - (void)gestureViewDidDoubleTap:(LPGestureView *)view;
+
+/** 滑动开始 */
+- (void)gestureViewPanBegan:(LPGestureView *)view;
+/** 滑动结束 */
+- (void)gestureViewPanEnded:(LPGestureView *)view;
 /** 左右滑动 */
-- (void)gestureView:(LPGestureView *)view addX:(CGFloat)x;
+- (void)gestureView:(LPGestureView *)view addX:(CGFloat)x isEnd:(BOOL)isEnd;
 /** 上下滑动 */
 - (void)gestureView:(LPGestureView *)view addY:(CGFloat)y left:(BOOL)left;
 @end
@@ -39,4 +44,6 @@ typedef NS_ENUM(NSInteger, LPPanDirection) {
 @interface LPGestureView : UIView
 ///代理
 @property (weak, nonatomic) id <LPGestureViewDelegate> delegate;
+///用户是否正在手动调整进度条
+@property (assign, nonatomic, readonly) BOOL isSlidingProgress;
 @end

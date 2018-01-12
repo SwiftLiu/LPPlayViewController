@@ -13,10 +13,12 @@
 @class LPProgressBar;
 @protocol LPProgressBarDelegate <NSObject>
 @optional
+/** 用户开始手动滑动进度条时 */
+- (void)progressBar:(LPProgressBar *)bar slidingBeganAtTime:(NSTimeInterval)time;
 /** 用户手动滑动进度条时 */
-- (void)progressBar:(LPProgressBar *)bar userDidSlidindAtTime:(NSTimeInterval)time;
+- (void)progressBar:(LPProgressBar *)bar slidingMovedAtTime:(NSTimeInterval)time;
 /** 用户手动滑动进度条结束 */
-- (void)progressBar:(LPProgressBar *)bar userSlidedDidEndedAtTime:(NSTimeInterval)time;
+- (void)progressBar:(LPProgressBar *)bar slidingEndedAtTime:(NSTimeInterval)time;
 @end
 
 

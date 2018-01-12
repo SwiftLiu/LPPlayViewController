@@ -9,10 +9,11 @@
 #import <UIKit/UIKit.h>
 #import "LPPlayControlDelegate.h"
 #import "LPPlayHeader.h"
-
+#import "LPProgressBar.h"
 
 /*************** 播放器控制层 ***************/
 @interface LPPlayControl : UIView
+
 ///代理
 @property (weak, nonatomic) id <LPPlayControlDelegate> delegate;
 ///全屏（默认为NO）
@@ -20,6 +21,12 @@
 ///播放状态（默认为NO）
 @property (assign, nonatomic, getter=isPlaying) BOOL playing;
 
+///正在播放时间（单位：秒）
+@property (assign, nonatomic) NSTimeInterval playingTime;
+///缓存的时间（单位：秒）
+@property (assign, nonatomic) NSTimeInterval loadingTime;
+///总时间（单位：秒）
+@property (assign, nonatomic) NSTimeInterval totalTime;
 
 ///控制栏是否隐藏（默认为NO）
 @property (assign, nonatomic, readonly) BOOL barHidden;

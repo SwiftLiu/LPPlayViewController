@@ -10,8 +10,10 @@
 
 @interface LPGestureView ()
 {
-    CGPoint _currentGesturePoint;//当前手势相对手势开始点的位置
-    BOOL _gestureBeganLeft;//手势开始位置是否在屏幕左半部分
+    CGPoint currentGesturePoint;//当前手势相对手势开始点的位置
+    BOOL isLeft;//手势开始位置是否在屏幕左半部分
+    BOOL isBeganDirecation;//是否开始判断滑动方向
+    BOOL isHorizontal;//是否为横向滑动
 }
 @end
 
@@ -71,23 +73,51 @@
 
 //MARK: 滑动、拖拽
 - (void)pan:(UIPanGestureRecognizer *)gesture {
-    CGPoint p = [gesture translationInView:self];
-    if (pow(p.x, 2) > pow(p.y, 2)) {//左右
-        if (self.delegate && [self.delegate respondsToSelector:@selector(gestureView:addX:)]) {
-            [self.delegate gestureView:self addX:p.x-_currentGesturePoint.x];
-        }
-    }
-    else {//上下
+    if (!self.delegate) { return; }
+    
+    //①滑动开始代理
+    if (gesture.state == UIGestureRecognizerStateBegan) {
+        //重置初始位置
+        currentGesturePoint = CGPointZero;
+        //设置为开始判断方向
+        isBeganDirecation = YES;
         //判断手势开始位置在屏幕左边或右边
-        if (gesture.state == UIGestureRecognizerStateBegan) {
-            _gestureBeganLeft = [gesture locationInView:self].x < self.bounds.size.width*.5;
-        }
-        //回调
-        if (self.delegate && [self.delegate respondsToSelector:@selector(gestureView:addY:left:)]) {
-            [self.delegate gestureView:self addY:_currentGesturePoint.y-p.y left:_gestureBeganLeft];
+        isLeft = [gesture locationInView:self].x < self.bounds.size.width*.5;
+        //代理回调
+        if ([self.delegate respondsToSelector:@selector(gestureViewPanBegan:)]) {
+            [self.delegate gestureViewPanBegan:self];
         }
     }
     
-    _currentGesturePoint = p;
+    //②滑动方向判断（根据第一个滑动了2pt距离的点判断）
+    CGPoint p = [gesture translationInView:self];
+    if (isBeganDirecation && (pow(p.x, 2)+pow(p.y, 2)>=4)) {
+        isHorizontal = (pow(p.x, 2) > pow(p.y, 2));//判断是否为横向滑动
+        _isSlidingProgress = isHorizontal;//开始进度调节
+        isBeganDirecation = NO;//结束判断
+    }
+    
+    //③根据滑动方向回调对应代理协议
+    if (isHorizontal) {
+        if ([self.delegate respondsToSelector:@selector(gestureView:addX:isEnd:)]) {
+            [self.delegate gestureView:self addX:p.x-currentGesturePoint.x isEnd:gesture.state == UIGestureRecognizerStateEnded];
+        }
+    }else {
+        if ([self.delegate respondsToSelector:@selector(gestureView:addY:left:)]) {
+            [self.delegate gestureView:self addY:currentGesturePoint.y-p.y left:isLeft];
+        }
+    }
+    
+    //滑动结束代理
+    if (gesture.state == UIGestureRecognizerStateEnded) {
+        //结束进度调节
+        _isSlidingProgress = NO;
+        //代理回调
+        if ([self.delegate respondsToSelector:@selector(gestureViewPanEnded:)]) {
+            [self.delegate gestureViewPanEnded:self];
+        }
+    }
+    
+    currentGesturePoint = p;
 }
 @end

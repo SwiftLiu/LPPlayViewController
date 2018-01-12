@@ -12,6 +12,7 @@
 
 @interface LPPlayViewController ()<LPPlayControlDelegate>
 @property (strong, nonatomic) LPPlayControl *control;
+@property (strong, nonatomic) UIView *fullScreenBgView;//全屏时背景图层
 @end
 
 @interface LPPlayViewController ()
@@ -29,6 +30,7 @@
     vc.control = [LPPlayControl controlViewWithStyle:(style)];
     [vc.view addSubview:vc.control];
     vc.control.delegate = vc;
+    vc.control.totalTime = 2000;
     return vc;
 }
 
@@ -60,6 +62,17 @@
     //销毁控制层
     [self.control removeFromSuperview];
     self.control = nil;
+}
+
+
+- (UIView *)fullScreenBgView {
+    if (!_fullScreenBgView) {
+        __weak UIWindow *window = [[UIApplication sharedApplication] keyWindow];
+        _fullScreenBgView = [[UIView alloc] initWithFrame:window.bounds];
+        _fullScreenBgView.backgroundColor = [UIColor blackColor];
+        [window addSubview:_fullScreenBgView];
+    }
+    return _fullScreenBgView;
 }
 
 
@@ -98,15 +111,14 @@
         [application setStatusBarOrientation:UIInterfaceOrientationLandscapeLeft animated:YES];
     }
     [application setStatusBarStyle:(UIStatusBarStyleLightContent) animated:YES];
-    [application setStatusBarHidden:self.control.barHidden animated:YES];
+    [application setStatusBarHidden:self.control.barHidden animated:NO];
     
     //控制层和渲染层移动到App主window上
-    [self.control removeFromSuperview];
-    __weak UIWindow *window = [[UIApplication sharedApplication] keyWindow];
-    UIView *bgView = [[UIView alloc] initWithFrame:window.bounds];
-    bgView.backgroundColor = [UIColor blackColor];
-    [bgView addSubview:self.control];
-    [window addSubview:bgView];
+    UIView *bgView = self.control.superview;
+    if (bgView != self.fullScreenBgView) {
+        [self.control removeFromSuperview];
+        [self.fullScreenBgView addSubview:self.control];
+    }
     
     //动画
     __weak typeof(self) weakSelf = self;
@@ -131,8 +143,9 @@
     UIView *bgView = self.control.superview;
     if (bgView == self.view) { return; }
     [self.control removeFromSuperview];
-    [bgView removeFromSuperview];
     [self.view addSubview:self.control];
+    [bgView removeFromSuperview];
+    self.fullScreenBgView = nil;
     
     //动画
     __weak typeof(self) weakSelf = self;

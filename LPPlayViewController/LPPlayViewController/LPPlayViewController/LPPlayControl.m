@@ -7,7 +7,6 @@
 //
 
 #import "LPPlayControl.h"
-#import "LPProgressBar.h"
 #import "LPGestureView.h"
 
 
@@ -34,10 +33,10 @@
 //底部控制栏
 @property (weak, nonatomic) IBOutlet UIView *bottomBar;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *bottomBarBottomConstraint;
+@property (weak, nonatomic) IBOutlet LPProgressBar *progressBar;
 @property (weak, nonatomic) IBOutlet UIImageView *bottomBgImgView;
 @property (weak, nonatomic) IBOutlet UIButton *playButton;
 @property (weak, nonatomic) IBOutlet UIButton *clarityButton;
-@property (weak, nonatomic) IBOutlet LPProgressBar *progressBar;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *clarityButtonWidthConstraint;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *episodeButtonWidthConstraint;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *fullscreenButtonWidthConstraint;
@@ -79,11 +78,9 @@
     self.gestureView.delegate = self;
     
     //进度条
-    if (self.progressBar) {
-        self.progressBar.delegate = self;
-        self.progressBar.hoursHidden = YES;
-        self.progressBar.thumbImage = [UIImage imageNamed:@"LPPlayer_slider"];
-    }
+    self.progressBar.delegate = self;
+    self.progressBar.hoursHidden = YES;
+    self.progressBar.thumbImage = [UIImage imageNamed:@"LPPlayer_slider"];
     
     //暂停状态
     self.playing = NO;
@@ -96,6 +93,7 @@
 }
 
 
+#pragma mark - ------------------------ Setter & Getter --------------------------
 //播放状态
 - (void)setPlaying:(BOOL)playing {
     _playing = playing;
@@ -109,6 +107,35 @@
     _fullScreen = fullScreen;
     [self becomeFullScreen:fullScreen];
 }
+
+//正在播放时间（单位：秒）
+- (void)setPlayingTime:(NSTimeInterval)playingTime {
+    if (!self.gestureView.isSlidingProgress) {
+        self.progressBar.playingTime = playingTime;
+    }
+}
+- (NSTimeInterval)playingTime {
+    return self.progressBar.playingTime;
+}
+
+//缓存的时间（单位：秒）
+- (void)setLoadingTime:(NSTimeInterval)loadingTime {
+    self.progressBar.loadingTime = loadingTime;
+}
+- (NSTimeInterval)loadingTime {
+    return self.progressBar.loadingTime;
+}
+
+//总时间（单位：秒）
+- (void)setTotalTime:(NSTimeInterval)totalTime {
+    self.progressBar.totalTime = totalTime;
+}
+- (NSTimeInterval)totalTime {
+    return self.progressBar.totalTime;
+}
+
+
+
 
 
 
@@ -345,12 +372,19 @@
 
 
 #pragma mark - <LPProgressBarDelegate>协议实现
-- (void)progressBar:(LPProgressBar *)bar userDidSlidindAtTime:(NSTimeInterval)time {
-    //显示快进后退时间
-    
+- (void)progressBar:(LPProgressBar *)bar slidingBeganAtTime:(NSTimeInterval)time {
+    //取消延时隐藏控制栏
+    [self cancelAutoHideBar];
 }
 
-- (void)progressBar:(LPProgressBar *)bar userSlidedDidEndedAtTime:(NSTimeInterval)time {
+- (void)progressBar:(LPProgressBar *)bar slidingMovedAtTime:(NSTimeInterval)time {
+    //显示快进后退时间
+    //MARK: NeedDo <<<<<<<<<<<<<<<<<<<<<<<<< 5 >>>>>>>>>>>>>>>>>>>>>>>>>
+}
+
+- (void)progressBar:(LPProgressBar *)bar slidingEndedAtTime:(NSTimeInterval)time {
+    //延时隐藏控制栏
+    [self autoHideBarIfNeed];
     //快进、后退
     if (self.delegate && [self.delegate respondsToSelector:@selector(control:didSeekedToTime:)]) {
         [self.delegate control:self didSeekedToTime:time];
@@ -368,14 +402,35 @@
 }
 
 - (void)gestureViewDidDoubleTap:(LPGestureView *)view {
+    //等同于点击播放按钮
+    [self playButtonPressed:self.playButton];
+}
+
+- (void)gestureViewPanBegan:(LPGestureView *)view {
+    //取消延时隐藏控制栏
+    [self cancelAutoHideBar];
+}
+
+- (void)gestureViewPanEnded:(LPGestureView *)view {
+    //延时隐藏控制栏
+    [self autoHideBarIfNeed];
+}
+
+- (void)gestureView:(LPGestureView *)view addX:(CGFloat)x isEnd:(BOOL)isEnd {
+    //进度条调节
+    self.progressBar.playingTime += x/5.f;
+    NSLog(@"左右调节：%.0lf----  %.0lf", x, self.progressBar.playingTime);
+    //播放时间弹出层
     
+    //快进后退代理回调
+    if (isEnd) {
+        if (self.delegate && [self.delegate respondsToSelector:@selector(control:didSeekedToTime:)]) {
+            [self.delegate control:self didSeekedToTime:self.playingTime];
+        }
+    }
 }
 
-- (void)gestureView:(LPGestureView *)view panX:(CGFloat)x {
-    NSLog(@"左右调节：%.0lf", x);
-}
-
-- (void)gestureView:(LPGestureView *)view panY:(CGFloat)y left:(BOOL)left {
+- (void)gestureView:(LPGestureView *)view addY:(CGFloat)y left:(BOOL)left {
     NSLog(@"上下调节-%@：%.0lf", left?@"左":@"右", y);
 }
 

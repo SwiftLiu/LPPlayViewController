@@ -26,14 +26,6 @@
 
 @end
 
-@interface LPProgressBar ()
-{
-    CGFloat beganTouchX;//开始触摸点的横坐标
-}
-@end
-
-
-
 
 
 @implementation LPProgressBar
@@ -44,8 +36,18 @@
     view.frame = self.bounds;
     [self addSubview:view];
     
+    //单击手势
+    UITapGestureRecognizer *sigleTap = [[UITapGestureRecognizer alloc] init];
+    sigleTap.numberOfTapsRequired = 1;
+    [sigleTap addTarget:self action:@selector(sigleClicked:)];
+    [self addGestureRecognizer:sigleTap];
+    
+    //滑动、拖拽
+    UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] init];
+    [pan addTarget:self action:@selector(pan:)];
+    [self addGestureRecognizer:pan];
+    
     self.totalTime = 0;
-    self.playingTime = 0;
     self.fontSize = 9;
 }
 
@@ -121,20 +123,25 @@
 //MARK: 正在播放时间
 - (void)setPlayingTime:(NSTimeInterval)playingTime {
     if (_isSliding) { return; }
-    _playingTime = playingTime;
-    self.playingImgViewWidthConstraint.constant = self.totalImgView.bounds.size.width * playingTime/_totalTime;
+    playingTime = MAX(playingTime, 0);
+    _playingTime = MIN(playingTime, _totalTime);
+    self.playingImgViewWidthConstraint.constant = self.totalImgView.bounds.size.width * _playingTime/_totalTime;
     [self updateTimeLabel];
 }
 
 //MARK: 已加载的时间
 - (void)setLoadingTime:(NSTimeInterval)loadingTime {
-    _loadingTime = loadingTime;
-    self.loadingImgViewWidthConstraint.constant = self.totalImgView.bounds.size.width * loadingTime/_totalTime;
+    loadingTime = MAX(loadingTime, 0);
+    _loadingTime = MIN(loadingTime, _totalTime);
+    self.loadingImgViewWidthConstraint.constant = self.totalImgView.bounds.size.width * _loadingTime/_totalTime;
 }
 
+//MARK: 总时间
 - (void)setTotalTime:(NSTimeInterval)totalTime {
     if (_isSliding) { return; }
     _totalTime = MAX(totalTime, 0.000001);
+    _playingTime = MIN(_playingTime, _totalTime);
+    _loadingTime = MIN(_loadingTime, _totalTime);
     self.playingImgViewWidthConstraint.constant = self.totalImgView.bounds.size.width * _playingTime/_totalTime;
     self.loadingImgViewWidthConstraint.constant = self.totalImgView.bounds.size.width * _loadingTime/_totalTime;
     [self updateTimeLabel];
@@ -158,46 +165,70 @@
     self.totalLabel.text = _remainedTime?[@"-" stringByAppendingString:totalText]:totalText;
 }
 
+//滚动到指定位置
+- (BOOL)shouldSlidingToX:(CGFloat)x {
+    CGFloat width = self.progressView.bounds.size.width;
+    if (x < -15) {
+        return NO;
+    }
+    else if (x < 0) {
+        self.playingImgViewWidthConstraint.constant = 0;
+        _playingTime = 0;
+    }else if (x < width) {
+        self.playingImgViewWidthConstraint.constant = x;
+        _playingTime = _totalTime * x / width;
+    }else if (x < width+15) {
+        self.playingImgViewWidthConstraint.constant = width;
+        _playingTime = _totalTime;
+    }else {
+        return NO;
+    }
+    [self updateTimeLabel];
+    return YES;
+}
+
+
 
 
 #pragma mark - ------------------------ 用户交互 --------------------------
-- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    CGFloat x = [touches.anyObject locationInView:self].x;
-    CGRect rect = self.progressView.frame;
-    if (x>CGRectGetMinX(rect)-15 && x<CGRectGetMaxX(rect)+15) {
-        beganTouchX = x;
-    }
-}
-
-- (void)touchesMoved:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    CGFloat x = [touches.anyObject locationInView:self.progressView].x;
-    if (beganTouchX > 0 && x-beganTouchX > 5) {
-        _isSliding = YES;
-        beganTouchX = 0;
-    }
-    if (_isSliding) {
-        CGFloat width = self.progressView.bounds.size.width;
-        x = MIN(x, width);
-        x = MAX(x, 0);
-        self.playingImgViewWidthConstraint.constant = x;
-        _playingTime = _totalTime * x / width;
-        [self updateTimeLabel];
-        
+//MARK: 单击
+- (void)sigleClicked:(UITapGestureRecognizer *)gesture {
+    CGFloat x = [gesture locationInView:self.progressView].x;
+    if ([self shouldSlidingToX:x]) {
         //代理回调
-        if (self.delegate && [self.delegate respondsToSelector:@selector(progressBar:userDidSlidindAtTime:)]) {
-            [self.delegate progressBar:self userDidSlidindAtTime:_playingTime];
+        if (self.delegate && [self.delegate respondsToSelector:@selector(progressBar:slidingEndedAtTime:)]) {
+            [self.delegate progressBar:self slidingEndedAtTime:_playingTime];
         }
     }
 }
 
-- (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    if (_isSliding) {
-        [self touchesMoved:touches withEvent:event];
+//MARK: 滑动、拖拽
+- (void)pan:(UIPanGestureRecognizer *)gesture {
+    //滑动中
+    CGFloat x = [gesture locationInView:self.progressView].x;
+    if ([self shouldSlidingToX:x]) {
+        //代理回调
+        if (self.delegate && [self.delegate respondsToSelector:@selector(progressBar:slidingMovedAtTime:)]) {
+            [self.delegate progressBar:self slidingMovedAtTime:_playingTime];
+        }
+    }
+    
+    //滑动开始
+    if (gesture.state == UIGestureRecognizerStateBegan) {
+        _isSliding = YES;
+        //代理回调
+        if (self.delegate && [self.delegate respondsToSelector:@selector(progressBar:slidingBeganAtTime:)]) {
+            [self.delegate progressBar:self slidingBeganAtTime:_playingTime];
+        }
+    }
+    //滑动结束
+    else if (gesture.state == UIGestureRecognizerStateEnded) {
         _isSliding = NO;
         //代理回调
-        if (self.delegate && [self.delegate respondsToSelector:@selector(progressBar:userSlidedDidEndedAtTime:)]) {
-            [self.delegate progressBar:self userSlidedDidEndedAtTime:_playingTime];
+        if (self.delegate && [self.delegate respondsToSelector:@selector(progressBar:slidingEndedAtTime:)]) {
+            [self.delegate progressBar:self slidingEndedAtTime:_playingTime];
         }
     }
 }
+
 @end
