@@ -18,7 +18,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    LPPlayViewController *pvc = [LPPlayViewController viewControllerWithStyle:(LPPlayStyleNormal)];
+    LPPlayViewController *pvc = [LPPlayViewController playControllerWithStyle:(LPPlayStyleNormal)];
     [self addChildViewController:pvc];
     pvc.view.frame = CGRectMake(0, 20, self.view.bounds.size.width, 220);
     [self.view addSubview:pvc.view];

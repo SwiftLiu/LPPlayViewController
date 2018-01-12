@@ -123,6 +123,24 @@
 }
 
 
+//清晰度名称
+- (void)setClarityNames:(NSArray<NSString *> *)clarityNames {
+    _clarityNames = clarityNames;
+    self.selectedClarityIndex = _selectedClarityIndex;
+    if (self.isFullScreen) {
+        self.clarityButtonWidthConstraint.constant = clarityNames.count?LPPLAYER_WIDTH:0;
+    }
+}
+
+//选中的清晰度
+- (void)setSelectedClarityIndex:(NSInteger)selectedClarityIndex {
+    _selectedClarityIndex = selectedClarityIndex;
+    NSString *title = [self.clarityNames objectAtIndex:selectedClarityIndex];
+    [self.clarityButton setTitle:title forState:(UIControlStateNormal)];
+}
+
+
+
 //正在播放时间（单位：秒）
 - (void)setPlayingTime:(NSTimeInterval)playingTime {
     if (!self.gestureView.isSlidingProgress) {
@@ -180,7 +198,7 @@
         self.secondTopButton.hidden = NO;
         self.bottomBgImgView.hidden = NO;
         self.topBarTopMarginConstraint.constant = 20;
-        self.clarityButtonWidthConstraint.constant = LPPLAYER_WIDTH;
+        self.clarityButtonWidthConstraint.constant = self.clarityNames.count?LPPLAYER_WIDTH:0;
         self.episodeButtonWidthConstraint.constant = LPPLAYER_WIDTH;
         self.fullscreenButtonWidthConstraint.constant = 0;
     }

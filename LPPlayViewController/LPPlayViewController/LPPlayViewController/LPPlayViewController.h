@@ -16,6 +16,8 @@
 @optional
 /** 点击返回按钮时 */
 - (void)playControllerDidClickedBackButton:(LPPlayViewController *)playController;
+
+@required
 /** 清晰度名称 */
 - (NSArray<NSString*> *)claritiesInPlayController:(LPPlayViewController *)playController;
 /** 各清晰度资源地址 */
@@ -38,9 +40,16 @@
 ///设备旋转时是否允许自动全屏（默认为YES）
 @property (assign, nonatomic) BOOL autoFullScreen;
 
+
+///当前播放的网络视频地址
+@property (copy, nonatomic, readonly) NSString *url;
+///播放器风格（默认为LPPlayStyleNormal）
+@property (assign, nonatomic, readonly) LPPlayStyle style;
 ///当前是否为全屏模式（默认为NO）
 @property (assign, nonatomic, readonly) BOOL isFullScreen;
 
-/** 便利初始化 */
-+ (instancetype)viewControllerWithStyle:(LPPlayStyle)style;
+/** 初始化 */
++ (instancetype)playControllerWithStyle:(LPPlayStyle)style;
+/** 刷新播放器 */
+- (void)reloadData;
 @end

@@ -98,9 +98,9 @@
 		AC61C71B2004C2AC00209231 /* LPPlayViewController */ = {
 			isa = PBXGroup;
 			children = (
-				AC73C7C62005BA1A00F042C7 /* LPPlayHeader.h */,
 				AC61C7242004C2AC00209231 /* LPPlayViewController.h */,
 				AC61C7252004C2AC00209231 /* LPPlayViewController.m */,
+				AC73C7C62005BA1A00F042C7 /* LPPlayHeader.h */,
 				AC73C7C72006734500F042C7 /* UIViewController+LPPlayerRotation.h */,
 				AC73C7C82006734500F042C7 /* UIViewController+LPPlayerRotation.m */,
 				AC61C7212004C2AC00209231 /* LPPlayControlDelegate.h */,
@@ -353,6 +353,10 @@
 				INFOPLIST_FILE = LPPlayViewController/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/LPPlayViewController/PLPlayerKit/Pod/Library/lib",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = iOSLiu.LPPlayViewController;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -368,6 +372,10 @@
 				INFOPLIST_FILE = LPPlayViewController/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/LPPlayViewController/PLPlayerKit/Pod/Library/lib",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = iOSLiu.LPPlayViewController;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = 1;

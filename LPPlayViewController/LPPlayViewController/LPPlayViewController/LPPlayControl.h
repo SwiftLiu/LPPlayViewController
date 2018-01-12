@@ -23,6 +23,11 @@
 ///竖屏时是否需要控制栏顶部预留20pt高度（默认为NO）
 @property (assign, nonatomic) BOOL statusBarMargin;
 
+///清晰度名称
+@property (copy, nonatomic) NSArray<NSString*> *clarityNames;
+///选中的清晰度索引
+@property (assign, nonatomic) NSInteger selectedClarityIndex;
+
 ///正在播放时间（单位：秒）
 @property (assign, nonatomic) NSTimeInterval playingTime;
 ///缓存的时间（单位：秒）

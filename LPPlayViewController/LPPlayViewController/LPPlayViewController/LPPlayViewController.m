@@ -9,8 +9,10 @@
 #import "LPPlayViewController.h"
 #import "LPPlayControl.h"
 #import "UIViewController+LPPlayerRotation.h"
+#import "PLPlayerKit.h"
 
-@interface LPPlayViewController ()<LPPlayControlDelegate>
+@interface LPPlayViewController ()<LPPlayControlDelegate, PLPlayerDelegate>
+@property (strong, nonatomic) PLPlayer *player;
 @property (strong, nonatomic) LPPlayControl *control;
 @property (strong, nonatomic) UIView *fullScreenBgView;//全屏时背景图层
 @end
@@ -27,14 +29,63 @@
 
 @implementation LPPlayViewController
 
-+ (instancetype)viewControllerWithStyle:(LPPlayStyle)style {
+- (void)dealloc {
+    //屏幕亮度恢复到初始亮度
+    [UIScreen mainScreen].brightness = self.screenOriginBrightness;
+    // 移除通知
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    //停止监测设备方向
+    [[UIDevice currentDevice] endGeneratingDeviceOrientationNotifications];
+    //销毁控制层
+    [self.control removeFromSuperview];
+    self.control = nil;
+    //销毁播放器
+    [self.player stop];
+    [self.player.playerView removeFromSuperview];
+    self.player = nil;
+}
+
++ (instancetype)playControllerWithStyle:(LPPlayStyle)style {
     LPPlayViewController *vc = [[LPPlayViewController alloc] init];
-    vc.control = [LPPlayControl controlViewWithStyle:(style)];
-    [vc.view addSubview:vc.control];
-    vc.control.delegate = vc;
-    vc.control.totalTime = 2000;
+    [vc setStyle:style];
     return vc;
 }
+
+- (void)setStyle:(LPPlayStyle)style {
+    _style = style;
+    
+    //控制图层
+    self.control = [LPPlayControl controlViewWithStyle:(style)];
+    [self.view addSubview:self.control];
+    self.control.delegate = self;
+    self.control.totalTime = 2000;
+    
+    //播放器
+    PLPlayerOption *option = [PLPlayerOption defaultOption];
+    [option setOptionValue:@10 forKey:PLPlayerOptionKeyTimeoutIntervalForMediaPackets];
+    if (style == LPPlayStyleLive) {//直播播放器
+        self.player = [PLPlayer playerLiveWithURL:nil option:option];
+    }else {//点播播放器
+        self.player = [PLPlayer playerWithURL:nil option:option];
+    }
+    self.player.delegate = self;
+    self.player.delegateQueue = dispatch_get_main_queue();
+    self.player.backgroundPlayEnable = YES;
+    if (self.player.status == PLPlayerStatusError) { return; }
+    UIView *playerView = self.player.playerView;
+    if (!playerView.superview) {
+        playerView.contentMode = UIViewContentModeScaleAspectFit;
+        playerView.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin
+        | UIViewAutoresizingFlexibleTopMargin
+        | UIViewAutoresizingFlexibleLeftMargin
+        | UIViewAutoresizingFlexibleRightMargin
+        | UIViewAutoresizingFlexibleWidth
+        | UIViewAutoresizingFlexibleHeight;
+        [self.control insertSubview:playerView atIndex:0];
+    }
+}
+
+
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -55,22 +106,15 @@
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
     self.control.frame = self.control.superview.bounds;
+    self.player.playerView.frame = self.control.bounds;
 }
 
 
-- (void)dealloc {
-    //屏幕亮度恢复到初始亮度
-    [UIScreen mainScreen].brightness = self.screenOriginBrightness;
-    // 移除通知
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-    //停止监测设备方向
-    [[UIDevice currentDevice] endGeneratingDeviceOrientationNotifications];
-    //销毁控制层
-    [self.control removeFromSuperview];
-    self.control = nil;
-}
 
 
+
+#pragma mark - ------------------------ Setter & Getter --------------------------
+//全屏背景图层
 - (UIView *)fullScreenBgView {
     if (!_fullScreenBgView) {
         __weak UIWindow *window = [[UIApplication sharedApplication] keyWindow];
@@ -79,6 +123,21 @@
         [window addSubview:_fullScreenBgView];
     }
     return _fullScreenBgView;
+}
+
+
+#pragma mark - ------------------------ 外部方法 --------------------------
+//MARK: 刷新播放器
+- (void)reloadData {
+    if (!self.delegate) { return; }
+    //清晰度
+    self.control.clarityNames = [self.delegate claritiesInPlayController:self];
+    //播放地址
+    NSString *url = [self.delegate playController:self urlOfClarityAtIndex:self.control.selectedClarityIndex];
+    if ([_url isEqualToString:url]) { return; }
+    _url = url;
+    NSURL *URL = [NSURL URLWithString:url?:@""];
+    [self.player playWithURL:URL sameSource:NO];
 }
 
 
@@ -97,18 +156,18 @@
     if (_orientation == deviceOri) { return; }
     if (UIDeviceOrientationIsLandscape(deviceOri)) {
         _orientation = deviceOri;
-        [self beFullScreenToLeft:deviceOri==UIDeviceOrientationLandscapeLeft];//横屏
+        [self becomeFullScreenToLeft:deviceOri==UIDeviceOrientationLandscapeLeft];//横屏
         self.control.fullScreen = YES;
     }
     else if (UIDeviceOrientationIsPortrait(deviceOri) && !UIDeviceOrientationIsPortrait(_orientation)) {
         _orientation = deviceOri;
-        [self bePortraitScreen];//竖屏
+        [self becomePortraitScreen];//竖屏
         self.control.fullScreen = NO;
     }
 }
 
 //MARK: 全屏
-- (void)beFullScreenToLeft:(BOOL)left {
+- (void)becomeFullScreenToLeft:(BOOL)left {
     //状态栏
     UIApplication *application = [UIApplication sharedApplication];
     if (left) {
@@ -138,7 +197,7 @@
 }
 
 //MARK: 竖直屏幕
-- (void)bePortraitScreen {
+- (void)becomePortraitScreen {
     //状态栏
     UIApplication *application = [UIApplication sharedApplication];
     [application setStatusBarOrientation:UIInterfaceOrientationPortrait animated:NO];
@@ -167,12 +226,21 @@
 
 
 
+
+
+#pragma mark - <PLPlayerDelegate>协议实现
+
+
+
+
+
+
 #pragma mark - <LPPlayControlDelegate>协议实现
 - (void)control:(LPPlayControl *)control didClickedFullScreenButton:(BOOL)fullScreen {
     if (fullScreen) {//全屏
-        [self beFullScreenToLeft:YES];
+        [self becomeFullScreenToLeft:YES];
     } else {//竖屏
-        [self bePortraitScreen];
+        [self becomePortraitScreen];
     }
 }
 
