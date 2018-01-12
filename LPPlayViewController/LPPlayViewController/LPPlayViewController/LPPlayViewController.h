@@ -14,14 +14,16 @@
 @class LPPlayViewController;
 @protocol LPPlayViewControllerDelegate <NSObject>
 @optional
+/** 点击返回按钮时 */
+- (void)playControllerDidClickedBackButton:(LPPlayViewController *)playController;
 /** 清晰度名称 */
-- (NSArray<NSString*> *)claritiesInViewController:(LPPlayViewController *)viewController;
+- (NSArray<NSString*> *)claritiesInPlayController:(LPPlayViewController *)playController;
 /** 各清晰度资源地址 */
-- (NSString *)viewController:(LPPlayViewController *)viewController urlOfClarityAtIndex:(NSInteger)index;
+- (NSString *)playController:(LPPlayViewController *)playController urlOfClarityAtIndex:(NSInteger)index;
 /** 选集数 */
-- (NSInteger)numberOfSetsInViewController:(LPPlayViewController *)viewController;
+- (NSInteger)numberOfSetsInPlayController:(LPPlayViewController *)playController;
 /** 选集item */
-//- (uicollection)numberOfSetsInViewController:(LPPlayViewController *)viewController;
+//- (uicollection)numberOfSetsInPlayController:(LPPlayViewController *)playController;
 @end
 
 

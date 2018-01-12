@@ -6,6 +6,7 @@
 //  Copyright © 2018年 iOS_刘平. All rights reserved.
 //
 
+#import <MediaPlayer/MediaPlayer.h>
 #import "LPPlayControl.h"
 #import "LPGestureView.h"
 
@@ -13,6 +14,9 @@
 @interface LPPlayControl ()<LPProgressBarDelegate, LPGestureViewDelegate>
 //手势层
 @property (weak, nonatomic) IBOutlet LPGestureView *gestureView;
+//返回按钮
+@property (weak, nonatomic) IBOutlet UIButton *backButton;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *backButtonTopConstraint;
 
 //右边控制栏
 @property (weak, nonatomic) IBOutlet UIView *rightBar;
@@ -44,7 +48,7 @@
 
 
 @interface LPPlayControl ()
-
+@property (strong, nonatomic) UISlider *volumeSlider;
 @end
 
 
@@ -88,6 +92,9 @@
     //竖屏模式
     [self becomeFullScreen:NO];
     
+    //顶部空白预留
+    self.statusBarMargin = NO;
+    
     //控制栏默认显示状态
     _barHidden = NO;
 }
@@ -107,6 +114,14 @@
     _fullScreen = fullScreen;
     [self becomeFullScreen:fullScreen];
 }
+
+//竖屏时是否需要控制栏顶部预留20pt高度
+- (void)setStatusBarMargin:(BOOL)statusBarMargin {
+    _statusBarMargin = statusBarMargin;
+    self.backButtonTopConstraint.constant = statusBarMargin?20:0;
+    self.topBarTopMarginConstraint.constant = statusBarMargin?20:0;
+}
+
 
 //正在播放时间（单位：秒）
 - (void)setPlayingTime:(NSTimeInterval)playingTime {
@@ -135,6 +150,19 @@
 }
 
 
+//音量调节滑块Getter
+- (UISlider *)volumeSlider {
+    if (!_volumeSlider) {
+        MPVolumeView *volumeView = [[MPVolumeView alloc] init];
+        for (UIView *view in [volumeView subviews]){
+            if ([view.class.description isEqualToString:@"MPVolumeSlider"]){
+                _volumeSlider = (UISlider *)view;
+                break;
+            }
+        }
+    }
+    return _volumeSlider;
+}
 
 
 
@@ -144,6 +172,7 @@
 - (void)becomeFullScreen:(BOOL)fullScreen {
     if (fullScreen) {
         //全屏布局
+        self.backButton.hidden = YES;
         self.rightBar.hidden = NO;
         self.topBarBgImgView.hidden = NO;
         self.topBackButton.hidden = NO;
@@ -157,13 +186,14 @@
     }
     else {
         //竖屏布局
+        self.backButton.hidden = NO;
         self.rightBar.hidden = YES;
         self.topBarBgImgView.hidden = YES;
         self.topBackButton.hidden = YES;
         self.titleLabel.hidden = YES;
         self.secondTopButton.hidden = YES;
         self.bottomBgImgView.hidden = YES;
-        self.topBarTopMarginConstraint.constant = 0;
+        self.topBarTopMarginConstraint.constant = self.statusBarMargin?20:0;
         self.clarityButtonWidthConstraint.constant = 0;
         self.episodeButtonWidthConstraint.constant = 0;
         self.fullscreenButtonWidthConstraint.constant = LPPLAYER_WIDTH;
@@ -421,7 +451,7 @@
     self.progressBar.playingTime += x/5.f;
     NSLog(@"左右调节：%.0lf----  %.0lf", x, self.progressBar.playingTime);
     //播放时间弹出层
-    
+    //MARK: NeedDo <<<<<<<<<<<<<<<<<<<<<<<<< 6 >>>>>>>>>>>>>>>>>>>>>>>>>
     //快进后退代理回调
     if (isEnd) {
         if (self.delegate && [self.delegate respondsToSelector:@selector(control:didSeekedToTime:)]) {
@@ -431,7 +461,14 @@
 }
 
 - (void)gestureView:(LPGestureView *)view addY:(CGFloat)y left:(BOOL)left {
-    NSLog(@"上下调节-%@：%.0lf", left?@"左":@"右", y);
+    CGFloat addedScale = y / (self.bounds.size.height*.62);
+    if (left) {//亮度调节
+        [UIScreen mainScreen].brightness += addedScale;
+        //MARK: NeedDo <<<<<<<<<<<<<<<<<<<<<<<<< 7 >>>>>>>>>>>>>>>>>>>>>>>>>
+    }
+    else {//音量调节
+        self.volumeSlider.value += addedScale;
+    }
 }
 
 @end

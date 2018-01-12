@@ -20,6 +20,8 @@
 @property (assign, nonatomic, getter=isFullScreen) BOOL fullScreen;
 ///播放状态（默认为NO）
 @property (assign, nonatomic, getter=isPlaying) BOOL playing;
+///竖屏时是否需要控制栏顶部预留20pt高度（默认为NO）
+@property (assign, nonatomic) BOOL statusBarMargin;
 
 ///正在播放时间（单位：秒）
 @property (assign, nonatomic) NSTimeInterval playingTime;

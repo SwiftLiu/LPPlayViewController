@@ -16,9 +16,11 @@
 @end
 
 @interface LPPlayViewController ()
-@property (assign, nonatomic, readonly) UIStatusBarStyle statusBarStyle;//状态栏初始风格
-@property (assign, nonatomic, readonly) BOOL statusBarHidden;//状态栏初始状态
 @property (assign, nonatomic, readonly) UIDeviceOrientation orientation;//屏幕方向
+
+@property (assign, nonatomic, readonly) UIStatusBarStyle statusBarOriginStyle;//状态栏初始风格
+@property (assign, nonatomic, readonly) BOOL statusBarOriginHidden;//状态栏初始状态
+@property (assign, nonatomic, readonly) CGFloat screenOriginBrightness;//屏幕初始亮度
 @end
 
 
@@ -41,8 +43,10 @@
     //设备默认方向
     _orientation = UIDeviceOrientationPortrait;
     //状态栏初始风格
-    _statusBarStyle = [UIApplication sharedApplication].statusBarStyle;
-    _statusBarHidden = [UIApplication sharedApplication].statusBarHidden;
+    _statusBarOriginStyle = [UIApplication sharedApplication].statusBarStyle;
+    _statusBarOriginHidden = [UIApplication sharedApplication].statusBarHidden;
+    //屏幕初始亮度
+    _screenOriginBrightness = [UIScreen mainScreen].brightness;
     
     //开始监听转屏
     [self addNotifications];
@@ -55,6 +59,8 @@
 
 
 - (void)dealloc {
+    //屏幕亮度恢复到初始亮度
+    [UIScreen mainScreen].brightness = self.screenOriginBrightness;
     // 移除通知
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     //停止监测设备方向
@@ -136,8 +142,8 @@
     //状态栏
     UIApplication *application = [UIApplication sharedApplication];
     [application setStatusBarOrientation:UIInterfaceOrientationPortrait animated:NO];
-    [application setStatusBarStyle:self.statusBarStyle animated:YES];
-    [application setStatusBarHidden:self.statusBarHidden animated:YES];
+    [application setStatusBarStyle:self.statusBarOriginStyle animated:YES];
+    [application setStatusBarHidden:self.statusBarOriginHidden animated:YES];
     
     //控制层和渲染层移动到根视图self.view上
     UIView *bgView = self.control.superview;
@@ -179,6 +185,12 @@
 - (void)control:(LPPlayControl *)control barsDidBeHidden:(BOOL)hidden {
     if (self.isFullScreen && !hidden) {
         [[UIApplication sharedApplication] setStatusBarHidden:hidden animated:YES];
+    }
+}
+
+- (void)controlDidClickedBackButton:(LPPlayControl *)control {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(playControllerDidClickedBackButton:)]) {
+        [self.delegate playControllerDidClickedBackButton:self];
     }
 }
 
