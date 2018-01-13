@@ -22,6 +22,8 @@
 - (void)control:(LPPlayControl *)control didClickedFullScreenButton:(BOOL)fullScreen;
 /** 点击提示时的按钮 */
 - (void)controlDidClickedAlertButton:(LPPlayControl *)control;
+/** 开始调整播放时间 */
+- (void)control:(LPPlayControl *)control beganSeekedFromTime:(NSTimeInterval)time;
 /** 快进到指定播放时间 */
 - (void)control:(LPPlayControl *)control didSeekedToTime:(NSTimeInterval)time;
 /** 调节音量时 */

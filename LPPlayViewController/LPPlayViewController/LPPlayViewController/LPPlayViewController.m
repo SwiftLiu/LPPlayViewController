@@ -18,6 +18,7 @@
 @end
 
 @interface LPPlayViewController ()
+@property (strong, nonatomic, readonly) NSTimer *timer;//计时器
 @property (assign, nonatomic, readonly) UIDeviceOrientation orientation;//屏幕方向
 
 @property (assign, nonatomic, readonly) UIStatusBarStyle statusBarOriginStyle;//状态栏初始风格
@@ -124,6 +125,7 @@
     return _fullScreenBgView;
 }
 
+//MARK: 是否自动全屏
 - (void)setAutoFullScreen:(BOOL)autoFullScreen {
     if (_autoFullScreen == autoFullScreen) { return; }
     _autoFullScreen = autoFullScreen;
@@ -139,6 +141,7 @@
     }
 }
 
+//MARK: 代理
 - (void)setDelegate:(id<LPPlayViewControllerDelegate>)delegate {
     _delegate = delegate;
     self.selectedSetIndex = _selectedSetIndex;
@@ -148,11 +151,21 @@
 //MARK: 播放选集
 - (void)setSelectedSetIndex:(NSInteger)selectedSetIndex {
     if (!self.delegate) { return; }
+    //总集数
+    NSInteger totalSets = [self.delegate numberOfSetsInPlayController:self];
+    if (selectedSetIndex > MAX(totalSets-1, 0)) { return; }
     _selectedSetIndex = selectedSetIndex;
-    //清晰度
+    //清晰度名称
     self.control.clarityNames = [self.delegate claritiesInPlayController:self];
     //播放地址
-    [self playUrlAtSet:selectedSetIndex];
+    [self playUrlAtSet:_selectedSetIndex];
+    //视频名称
+    self.control.title = [self.delegate playController:self titleInSet:_selectedSetIndex];
+    //即将播放的视频名称
+    NSInteger willIndex = _selectedSetIndex + 1;
+    if (willIndex < totalSets) {
+        self.control.willPlayTitle = [self.delegate playController:self titleInSet:willIndex];
+    }
 }
 
 
@@ -169,12 +182,37 @@
 //MARK: 播放新视频
 - (void)playUrlAtSet:(NSInteger)set {
     NSInteger index = self.control.selectedClarityIndex;
-    NSString *url = [self.delegate playController:self urlWitClarityIndex:index setIndex:set];
+    index = MIN(index, self.control.clarityNames.count-1);
+    index = MAX(index, 0);
+    NSString *url = [self.delegate playController:self urlOfClarityAtIndex:index inSet:set];
+    //encode解码
+    url = [url stringByRemovingPercentEncoding];
+    url = [url stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
     if ([_url isEqualToString:url]) { return; }
     _url = url;
     NSURL *URL = [NSURL URLWithString:url?:@""];
+    //播放
     [self.player playWithURL:URL sameSource:NO];
 }
+
+//MARK: 开始监听播放时间
+- (void)startObservingPlayedTime {
+    if (self.style == LPPlayStyleLive) { return; }
+    [_timer invalidate];
+    _timer = [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(updatePlayedTime) userInfo:nil repeats:YES];
+}
+
+//MARK: 停止播放时间监听
+- (void)stopObservingPlayedTime {
+    [_timer invalidate];
+    _timer = nil;
+}
+
+//MARK: 刷新播放时间
+- (void)updatePlayedTime {
+    self.control.playingTime = CMTimeGetSeconds(self.player.currentTime);
+}
+
 
 
 
@@ -259,12 +297,63 @@
 
 #pragma mark - <PLPlayerDelegate>协议实现
 - (void)player:(PLPlayer *)player statusDidChange:(PLPlayerStatus)state {
-    if (state == PLPlayerStatusPlaying) {
-        self.control.playing = YES;
+    switch (state) {
+        case PLPlayerStatusPreparing: {
+            NSLog(@"状态：PLPlayerStatusPreparing");
+        }
+            break;
+        case PLPlayerStatusReady: {
+            NSLog(@"状态：PLPlayerStatusReady");
+            CMTime time = self.player.totalDuration;
+            self.control.totalTime = CMTimeGetSeconds(time);
+            [self startObservingPlayedTime];
+        }
+            break;
+        case PLPlayerStatusCaching: {
+            NSLog(@"状态：PLPlayerStatusCaching");
+        }
+            break;
+        case PLPlayerStatusPlaying: {
+            NSLog(@"状态：PLPlayerStatusPlaying");
+            self.control.playing = YES;
+        }
+            break;
+        case PLPlayerStatusPaused: {
+            NSLog(@"状态：PLPlayerStatusPaused");
+            self.control.playing = NO;
+        }
+            break;
+        case PLPlayerStatusError: {
+            NSLog(@"状态：PLPlayerStatusError");
+            self.control.playing = NO;
+        }
+            break;
+        case PLPlayerStateAutoReconnecting: {
+            NSLog(@"状态：PLPlayerStateAutoReconnecting");
+        }
+            break;
+        case PLPlayerStatusStopped: {
+            NSLog(@"状态：PLPlayerStatusStopped");
+            
+        }
+            break;
+        case PLPlayerStatusCompleted: {
+            NSLog(@"状态：PLPlayerStatusCompleted");
+            [self stopObservingPlayedTime];
+            [self.control reset];
+        }
+            break;
+        default:{
+            NSLog(@"状态：PLPlayerStatusUnknow");
+        }
+            break;
     }
-    else if (state == PLPlayerStatusPaused) {
-        self.control.playing = NO;
-    }
+}
+
+
+
+- (void)player:(PLPlayer *)player stoppedWithError:(NSError *)error {
+    NSLog(@"%ld %@,%@", error.code, error.localizedDescription, error,error.localizedFailureReason);
 }
 
 
@@ -272,14 +361,6 @@
 
 
 #pragma mark - <LPPlayControlDelegate>协议实现
-- (void)control:(LPPlayControl *)control didClickedFullScreenButton:(BOOL)fullScreen {
-    if (fullScreen) {//全屏
-        [self becomeFullScreenToLeft:YES];
-    } else {//竖屏
-        [self becomePortraitScreen];
-    }
-}
-
 - (void)control:(LPPlayControl *)control barsWillBeHidden:(BOOL)hidden {
     if (self.isFullScreen && hidden) {
         [[UIApplication sharedApplication] setStatusBarHidden:hidden animated:YES];
@@ -292,6 +373,14 @@
     }
 }
 
+- (void)control:(LPPlayControl *)control didClickedFullScreenButton:(BOOL)fullScreen {
+    if (fullScreen) {//全屏
+        [self becomeFullScreenToLeft:YES];
+    } else {//竖屏
+        [self becomePortraitScreen];
+    }
+}
+
 - (void)controlDidClickedBackButton:(LPPlayControl *)control {
     if (self.delegate && [self.delegate respondsToSelector:@selector(playControllerDidClickedBackButton:)]) {
         [self.delegate playControllerDidClickedBackButton:self];
@@ -300,6 +389,25 @@
 
 - (void)control:(LPPlayControl *)control didSelectedSourceAtIndex:(NSInteger)index {
     [self playUrlAtSet:self.selectedSetIndex];
+}
+
+- (void)control:(LPPlayControl *)control didClickedPlayButtonWillPlaying:(BOOL)playing {
+    if (playing) {
+        [self.player resume];
+        [self startObservingPlayedTime];
+    }else {
+        [self.player pause];
+        [self stopObservingPlayedTime];
+    }
+}
+
+- (void)control:(LPPlayControl *)control beganSeekedFromTime:(NSTimeInterval)time {
+    [self stopObservingPlayedTime];
+}
+
+- (void)control:(LPPlayControl *)control didSeekedToTime:(NSTimeInterval)time {
+    [self.player seekTo:CMTimeMake(time+.9999, 1)];
+    [self startObservingPlayedTime];
 }
 
 @end

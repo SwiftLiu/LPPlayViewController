@@ -1,10 +1,10 @@
-FRAMEWORK_SEARCH_PATHS = $(inherited) "$PODS_CONFIGURATION_BUILD_DIR/AFNetworking" "$PODS_CONFIGURATION_BUILD_DIR/HappyDNS"
+FRAMEWORK_SEARCH_PATHS = $(inherited) "$PODS_CONFIGURATION_BUILD_DIR/AFNetworking" "$PODS_CONFIGURATION_BUILD_DIR/HappyDNS" "$PODS_CONFIGURATION_BUILD_DIR/JSONKit-NoWarning"
 GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1
 HEADER_SEARCH_PATHS = $(inherited) "${PODS_ROOT}/Headers/Public" "${PODS_ROOT}/Headers/Public/PLPlayerKit"
 LD_RUNPATH_SEARCH_PATHS = $(inherited) '@executable_path/Frameworks' '@loader_path/Frameworks'
 LIBRARY_SEARCH_PATHS = $(inherited) "${PODS_ROOT}/PLPlayerKit/Pod/Library/lib"
-OTHER_CFLAGS = $(inherited) -iquote "$PODS_CONFIGURATION_BUILD_DIR/AFNetworking/AFNetworking.framework/Headers" -iquote "$PODS_CONFIGURATION_BUILD_DIR/HappyDNS/HappyDNS.framework/Headers" -isystem "${PODS_ROOT}/Headers/Public" -isystem "${PODS_ROOT}/Headers/Public/PLPlayerKit"
-OTHER_LDFLAGS = $(inherited) -ObjC -l"PLPlayerKit" -l"avcodec" -l"avformat" -l"avutil" -l"bz2" -l"c++" -l"crypto" -l"iconv" -l"resolv" -l"speex" -l"ssl" -l"swresample" -l"z" -framework "AFNetworking" -framework "AVFoundation" -framework "AVKit" -framework "Accelerate" -framework "AudioToolbox" -framework "CoreAudio" -framework "CoreMedia" -framework "CoreVideo" -framework "Foundation" -framework "HappyDNS" -framework "MediaPlayer" -framework "OpenGLES" -framework "QuartzCore" -framework "UIKit" -framework "VideoToolbox"
+OTHER_CFLAGS = $(inherited) -iquote "$PODS_CONFIGURATION_BUILD_DIR/AFNetworking/AFNetworking.framework/Headers" -iquote "$PODS_CONFIGURATION_BUILD_DIR/HappyDNS/HappyDNS.framework/Headers" -iquote "$PODS_CONFIGURATION_BUILD_DIR/JSONKit-NoWarning/JSONKit_NoWarning.framework/Headers" -isystem "${PODS_ROOT}/Headers/Public" -isystem "${PODS_ROOT}/Headers/Public/PLPlayerKit"
+OTHER_LDFLAGS = $(inherited) -ObjC -l"PLPlayerKit" -l"avcodec" -l"avformat" -l"avutil" -l"bz2" -l"c++" -l"crypto" -l"iconv" -l"resolv" -l"speex" -l"ssl" -l"swresample" -l"z" -framework "AFNetworking" -framework "AVFoundation" -framework "AVKit" -framework "Accelerate" -framework "AudioToolbox" -framework "CoreAudio" -framework "CoreMedia" -framework "CoreVideo" -framework "Foundation" -framework "HappyDNS" -framework "JSONKit_NoWarning" -framework "MediaPlayer" -framework "OpenGLES" -framework "QuartzCore" -framework "UIKit" -framework "VideoToolbox"
 PODS_BUILD_DIR = $BUILD_DIR
 PODS_CONFIGURATION_BUILD_DIR = $PODS_BUILD_DIR/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)
 PODS_ROOT = ${SRCROOT}/Pods

@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "LPPlayControlDelegate.h"
 #import "LPPlayHeader.h"
-#import "LPProgressBar.h"
+#import "LPPlayProgressBar.h"
 
 /*************** 播放器控制层 ***************/
 @interface LPPlayControl : UIView
@@ -23,6 +23,10 @@
 ///竖屏时是否需要控制栏顶部预留20pt高度（默认为NO）
 @property (assign, nonatomic) BOOL statusBarMargin;
 
+///视频名称
+@property (copy, nonatomic) NSString *title;
+///即将播放视频名称
+@property (copy, nonatomic) NSString *willPlayTitle;
 ///清晰度名称
 @property (copy, nonatomic) NSArray<NSString*> *clarityNames;
 ///选中的清晰度索引
@@ -40,4 +44,6 @@
 
 /** 初始化 */
 + (instancetype)controlViewWithStyle:(LPPlayStyle)style;
+/** 重置控制层 */
+- (void)reset;
 @end

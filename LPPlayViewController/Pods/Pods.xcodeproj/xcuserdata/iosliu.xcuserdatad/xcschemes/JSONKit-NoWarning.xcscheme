@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "C1D5FFA4F975367109EE27D9BD7331DF"
-               BuildableName = "Pods_LPPlayViewController.framework"
-               BlueprintName = "Pods-LPPlayViewController"
+               BlueprintIdentifier = "C34907BE5BD26093A30DECD374885C1E"
+               BuildableName = "JSONKit_NoWarning.framework"
+               BlueprintName = "JSONKit-NoWarning"
                ReferencedContainer = "container:Pods.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -47,9 +47,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "C1D5FFA4F975367109EE27D9BD7331DF"
-            BuildableName = "Pods_LPPlayViewController.framework"
-            BlueprintName = "Pods-LPPlayViewController"
+            BlueprintIdentifier = "C34907BE5BD26093A30DECD374885C1E"
+            BuildableName = "JSONKit_NoWarning.framework"
+            BlueprintName = "JSONKit-NoWarning"
             ReferencedContainer = "container:Pods.xcodeproj">
          </BuildableReference>
       </MacroExpansion>

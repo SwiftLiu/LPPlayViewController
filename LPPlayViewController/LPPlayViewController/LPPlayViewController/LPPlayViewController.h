@@ -17,12 +17,13 @@
 /** 清晰度名称 */
 - (NSArray<NSString*> *)claritiesInPlayController:(LPPlayViewController *)playController;
 /** 资源地址 */
-- (NSString *)playController:(LPPlayViewController *)playController urlWitClarityIndex:(NSInteger)index setIndex:(NSInteger)set;
+- (NSString *)playController:(LPPlayViewController *)playController urlOfClarityAtIndex:(NSInteger)index inSet:(NSInteger)set;
 /** 选集数 */
 - (NSInteger)numberOfSetsInPlayController:(LPPlayViewController *)playController;
-/** 选集item */
+/** 选集标题 */
+- (NSString *)playController:(LPPlayViewController *)playController titleInSet:(NSInteger)set;
+/** 选集cell */
 - (UICollectionViewCell *)playController:(LPPlayViewController *)playController cellForItemAtIndex:(NSInteger)index;
-
 @optional
 /** 点击返回按钮时 */
 - (void)playControllerDidClickedBackButton:(LPPlayViewController *)playController;

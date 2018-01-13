@@ -1,14 +1,14 @@
 //
-//  LPProgressBar.m
-//  LPProgressBar
+//  LPPlayProgressBar.m
+//  LPPlayProgressBar
 //
 //  Created by iOSLiu on 2018/1/3.
 //  Copyright © 2018年 iOS_刘平. All rights reserved.
 //
 
-#import "LPProgressBar.h"
+#import "LPPlayProgressBar.h"
 
-@interface LPProgressBar ()
+@interface LPPlayProgressBar ()
 
 @property (weak, nonatomic) IBOutlet UIView *progressView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *progressViewLeftConstraint;
@@ -28,11 +28,11 @@
 
 
 
-@implementation LPProgressBar
+@implementation LPPlayProgressBar
 #pragma mark - ------------------------ 重写 --------------------------
 - (void)awakeFromNib {
     [super awakeFromNib];
-    UIView *view = [NSBundle.mainBundle loadNibNamed:@"LPProgressBar" owner:self options:nil].firstObject;
+    UIView *view = [NSBundle.mainBundle loadNibNamed:@"LPPlayProgressBar" owner:self options:nil].firstObject;
     view.frame = self.bounds;
     [self addSubview:view];
     

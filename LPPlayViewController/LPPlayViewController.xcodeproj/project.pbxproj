@@ -8,25 +8,33 @@
 
 /* Begin PBXBuildFile section */
 		A28379CF745CB33A6647CD5E /* Pods_LPPlayViewController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CF11E58CE2B2B056EADD2862 /* Pods_LPPlayViewController.framework */; };
+		AC1C563F2009D2750018DD65 /* BasicNetwork.m in Sources */ = {isa = PBXBuildFile; fileRef = AC1C563E2009D2750018DD65 /* BasicNetwork.m */; };
+		AC1C564A2009DACF0018DD65 /* LPPlayGestureView.m in Sources */ = {isa = PBXBuildFile; fileRef = AC1C56442009DACE0018DD65 /* LPPlayGestureView.m */; };
+		AC1C564B2009DACF0018DD65 /* LPPlayProgressBar.m in Sources */ = {isa = PBXBuildFile; fileRef = AC1C56482009DACE0018DD65 /* LPPlayProgressBar.m */; };
+		AC1C564C2009DACF0018DD65 /* LPPlayProgressBar.xib in Resources */ = {isa = PBXBuildFile; fileRef = AC1C56492009DACE0018DD65 /* LPPlayProgressBar.xib */; };
 		AC61C7072004C28800209231 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = AC61C7062004C28800209231 /* AppDelegate.m */; };
 		AC61C70A2004C28800209231 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AC61C7092004C28800209231 /* ViewController.m */; };
 		AC61C70D2004C28800209231 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AC61C70B2004C28800209231 /* Main.storyboard */; };
 		AC61C70F2004C28800209231 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AC61C70E2004C28800209231 /* Assets.xcassets */; };
 		AC61C7122004C28800209231 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AC61C7102004C28800209231 /* LaunchScreen.storyboard */; };
 		AC61C7152004C28800209231 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = AC61C7142004C28800209231 /* main.m */; };
-		AC61C72A2004C2AD00209231 /* LPGestureView.m in Sources */ = {isa = PBXBuildFile; fileRef = AC61C71E2004C2AC00209231 /* LPGestureView.m */; };
 		AC61C72B2004C2AD00209231 /* LPPlayControl.m in Sources */ = {isa = PBXBuildFile; fileRef = AC61C7202004C2AC00209231 /* LPPlayControl.m */; };
 		AC61C72C2004C2AD00209231 /* LPPlayControls.xib in Resources */ = {isa = PBXBuildFile; fileRef = AC61C7222004C2AC00209231 /* LPPlayControls.xib */; };
 		AC61C72D2004C2AD00209231 /* LPPlayer.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AC61C7232004C2AC00209231 /* LPPlayer.xcassets */; };
 		AC61C72E2004C2AD00209231 /* LPPlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AC61C7252004C2AC00209231 /* LPPlayViewController.m */; };
-		AC61C72F2004C2AD00209231 /* LPProgressBar.m in Sources */ = {isa = PBXBuildFile; fileRef = AC61C7282004C2AC00209231 /* LPProgressBar.m */; };
-		AC61C7302004C2AD00209231 /* LPProgressBar.xib in Resources */ = {isa = PBXBuildFile; fileRef = AC61C7292004C2AC00209231 /* LPProgressBar.xib */; };
 		AC73C7C92006734500F042C7 /* UIViewController+LPPlayerRotation.m in Sources */ = {isa = PBXBuildFile; fileRef = AC73C7C82006734500F042C7 /* UIViewController+LPPlayerRotation.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		24C55E8DD843D0F61A9604E2 /* Pods-LPPlayViewController.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LPPlayViewController.debug.xcconfig"; path = "Pods/Target Support Files/Pods-LPPlayViewController/Pods-LPPlayViewController.debug.xcconfig"; sourceTree = "<group>"; };
 		6A4228F84EB3E61031A4C71A /* Pods-LPPlayViewController.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LPPlayViewController.release.xcconfig"; path = "Pods/Target Support Files/Pods-LPPlayViewController/Pods-LPPlayViewController.release.xcconfig"; sourceTree = "<group>"; };
+		AC1C563D2009D2750018DD65 /* BasicNetwork.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BasicNetwork.h; sourceTree = "<group>"; };
+		AC1C563E2009D2750018DD65 /* BasicNetwork.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BasicNetwork.m; sourceTree = "<group>"; };
+		AC1C56432009DACE0018DD65 /* LPPlayGestureView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LPPlayGestureView.h; sourceTree = "<group>"; };
+		AC1C56442009DACE0018DD65 /* LPPlayGestureView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LPPlayGestureView.m; sourceTree = "<group>"; };
+		AC1C56472009DACE0018DD65 /* LPPlayProgressBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LPPlayProgressBar.h; sourceTree = "<group>"; };
+		AC1C56482009DACE0018DD65 /* LPPlayProgressBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LPPlayProgressBar.m; sourceTree = "<group>"; };
+		AC1C56492009DACE0018DD65 /* LPPlayProgressBar.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LPPlayProgressBar.xib; sourceTree = "<group>"; };
 		AC61C7022004C28800209231 /* LPPlayViewController.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LPPlayViewController.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AC61C7052004C28800209231 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		AC61C7062004C28800209231 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -37,8 +45,6 @@
 		AC61C7112004C28800209231 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		AC61C7132004C28800209231 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AC61C7142004C28800209231 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		AC61C71D2004C2AC00209231 /* LPGestureView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LPGestureView.h; sourceTree = "<group>"; };
-		AC61C71E2004C2AC00209231 /* LPGestureView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LPGestureView.m; sourceTree = "<group>"; };
 		AC61C71F2004C2AC00209231 /* LPPlayControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LPPlayControl.h; sourceTree = "<group>"; };
 		AC61C7202004C2AC00209231 /* LPPlayControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LPPlayControl.m; sourceTree = "<group>"; };
 		AC61C7212004C2AC00209231 /* LPPlayControlDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LPPlayControlDelegate.h; sourceTree = "<group>"; };
@@ -46,9 +52,6 @@
 		AC61C7232004C2AC00209231 /* LPPlayer.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = LPPlayer.xcassets; sourceTree = "<group>"; };
 		AC61C7242004C2AC00209231 /* LPPlayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LPPlayViewController.h; sourceTree = "<group>"; };
 		AC61C7252004C2AC00209231 /* LPPlayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LPPlayViewController.m; sourceTree = "<group>"; };
-		AC61C7272004C2AC00209231 /* LPProgressBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LPProgressBar.h; sourceTree = "<group>"; };
-		AC61C7282004C2AC00209231 /* LPProgressBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LPProgressBar.m; sourceTree = "<group>"; };
-		AC61C7292004C2AC00209231 /* LPProgressBar.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LPProgressBar.xib; sourceTree = "<group>"; };
 		AC73C7C62005BA1A00F042C7 /* LPPlayHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LPPlayHeader.h; sourceTree = "<group>"; };
 		AC73C7C72006734500F042C7 /* UIViewController+LPPlayerRotation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIViewController+LPPlayerRotation.h"; sourceTree = "<group>"; };
 		AC73C7C82006734500F042C7 /* UIViewController+LPPlayerRotation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+LPPlayerRotation.m"; sourceTree = "<group>"; };
@@ -75,6 +78,46 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		AC1C56402009DACE0018DD65 /* LPPlaySetsView */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = LPPlaySetsView;
+			sourceTree = "<group>";
+		};
+		AC1C56412009DACE0018DD65 /* LPPlayClarityView */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = LPPlayClarityView;
+			sourceTree = "<group>";
+		};
+		AC1C56422009DACE0018DD65 /* LPPlayGestureView */ = {
+			isa = PBXGroup;
+			children = (
+				AC1C56432009DACE0018DD65 /* LPPlayGestureView.h */,
+				AC1C56442009DACE0018DD65 /* LPPlayGestureView.m */,
+			);
+			path = LPPlayGestureView;
+			sourceTree = "<group>";
+		};
+		AC1C56452009DACE0018DD65 /* LPPlayLoader */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = LPPlayLoader;
+			sourceTree = "<group>";
+		};
+		AC1C56462009DACE0018DD65 /* LPPlayProgressBar */ = {
+			isa = PBXGroup;
+			children = (
+				AC1C56472009DACE0018DD65 /* LPPlayProgressBar.h */,
+				AC1C56482009DACE0018DD65 /* LPPlayProgressBar.m */,
+				AC1C56492009DACE0018DD65 /* LPPlayProgressBar.xib */,
+			);
+			path = LPPlayProgressBar;
+			sourceTree = "<group>";
+		};
 		AC61C6F92004C28800209231 = {
 			isa = PBXGroup;
 			children = (
@@ -99,6 +142,8 @@
 				AC61C71B2004C2AC00209231 /* LPPlayViewController */,
 				AC61C7052004C28800209231 /* AppDelegate.h */,
 				AC61C7062004C28800209231 /* AppDelegate.m */,
+				AC1C563D2009D2750018DD65 /* BasicNetwork.h */,
+				AC1C563E2009D2750018DD65 /* BasicNetwork.m */,
 				AC61C7082004C28800209231 /* ViewController.h */,
 				AC61C7092004C28800209231 /* ViewController.m */,
 				AC61C70B2004C28800209231 /* Main.storyboard */,
@@ -123,29 +168,13 @@
 				AC61C7202004C2AC00209231 /* LPPlayControl.m */,
 				AC61C7222004C2AC00209231 /* LPPlayControls.xib */,
 				AC61C7232004C2AC00209231 /* LPPlayer.xcassets */,
-				AC61C71C2004C2AC00209231 /* LPGestureView */,
-				AC61C7262004C2AC00209231 /* LPProgressBar */,
+				AC1C56422009DACE0018DD65 /* LPPlayGestureView */,
+				AC1C56462009DACE0018DD65 /* LPPlayProgressBar */,
+				AC1C56452009DACE0018DD65 /* LPPlayLoader */,
+				AC1C56412009DACE0018DD65 /* LPPlayClarityView */,
+				AC1C56402009DACE0018DD65 /* LPPlaySetsView */,
 			);
 			path = LPPlayViewController;
-			sourceTree = "<group>";
-		};
-		AC61C71C2004C2AC00209231 /* LPGestureView */ = {
-			isa = PBXGroup;
-			children = (
-				AC61C71D2004C2AC00209231 /* LPGestureView.h */,
-				AC61C71E2004C2AC00209231 /* LPGestureView.m */,
-			);
-			path = LPGestureView;
-			sourceTree = "<group>";
-		};
-		AC61C7262004C2AC00209231 /* LPProgressBar */ = {
-			isa = PBXGroup;
-			children = (
-				AC61C7272004C2AC00209231 /* LPProgressBar.h */,
-				AC61C7282004C2AC00209231 /* LPProgressBar.m */,
-				AC61C7292004C2AC00209231 /* LPProgressBar.xib */,
-			);
-			path = LPProgressBar;
 			sourceTree = "<group>";
 		};
 		B4FCE16AA1072280E94E9E8E /* Pods */ = {
@@ -218,9 +247,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AC1C564C2009DACF0018DD65 /* LPPlayProgressBar.xib in Resources */,
 				AC61C7122004C28800209231 /* LaunchScreen.storyboard in Resources */,
 				AC61C72C2004C2AD00209231 /* LPPlayControls.xib in Resources */,
-				AC61C7302004C2AD00209231 /* LPProgressBar.xib in Resources */,
 				AC61C72D2004C2AD00209231 /* LPPlayer.xcassets in Resources */,
 				AC61C70F2004C28800209231 /* Assets.xcassets in Resources */,
 				AC61C70D2004C28800209231 /* Main.storyboard in Resources */,
@@ -282,14 +311,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AC61C72A2004C2AD00209231 /* LPGestureView.m in Sources */,
 				AC61C70A2004C28800209231 /* ViewController.m in Sources */,
-				AC61C72F2004C2AD00209231 /* LPProgressBar.m in Sources */,
+				AC1C563F2009D2750018DD65 /* BasicNetwork.m in Sources */,
+				AC1C564A2009DACF0018DD65 /* LPPlayGestureView.m in Sources */,
 				AC61C72E2004C2AD00209231 /* LPPlayViewController.m in Sources */,
 				AC61C7152004C28800209231 /* main.m in Sources */,
 				AC61C7072004C28800209231 /* AppDelegate.m in Sources */,
 				AC61C72B2004C2AD00209231 /* LPPlayControl.m in Sources */,
 				AC73C7C92006734500F042C7 /* UIViewController+LPPlayerRotation.m in Sources */,
+				AC1C564B2009DACF0018DD65 /* LPPlayProgressBar.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -1,14 +1,14 @@
 //
-//  LPGestureView.m
+//  LPPlayGestureView.m
 //  LPPlayControl
 //
 //  Created by iOSLiu on 2018/1/8.
 //  Copyright © 2018年 iOS_刘平. All rights reserved.
 //
 
-#import "LPGestureView.h"
+#import "LPPlayGestureView.h"
 
-@interface LPGestureView ()
+@interface LPPlayGestureView ()
 {
     CGPoint currentGesturePoint;//当前手势相对手势开始点的位置
     BOOL isLeft;//手势开始位置是否在屏幕左半部分
@@ -17,7 +17,7 @@
 }
 @end
 
-@implementation LPGestureView
+@implementation LPPlayGestureView
 
 - (instancetype)init
 {
@@ -91,16 +91,28 @@
     
     //②滑动方向判断（根据第一个滑动了2pt距离的点判断）
     CGPoint p = [gesture translationInView:self];
+    CGFloat addX = p.x-currentGesturePoint.x;
     if (isBeganDirecation && (pow(p.x, 2)+pow(p.y, 2)>=4)) {
         isHorizontal = (pow(p.x, 2) > pow(p.y, 2));//判断是否为横向滑动
         _isSlidingProgress = isHorizontal;//开始进度调节
         isBeganDirecation = NO;//结束判断
+        if (isHorizontal) {
+            //代理回调
+            if ([self.delegate respondsToSelector:@selector(gestureView:beganPanWithAddedX:)]) {
+                [self.delegate gestureView:self beganPanWithAddedX:addX];
+            }
+        }
     }
     
     //③根据滑动方向回调对应代理协议
     if (isHorizontal) {
-        if ([self.delegate respondsToSelector:@selector(gestureView:addX:isEnd:)]) {
-            [self.delegate gestureView:self addX:p.x-currentGesturePoint.x isEnd:gesture.state == UIGestureRecognizerStateEnded];
+        if ([self.delegate respondsToSelector:@selector(gestureView:movedPanWithAddedX:)]) {
+            [self.delegate gestureView:self movedPanWithAddedX:addX];
+        }
+        if (gesture.state == UIGestureRecognizerStateEnded) {
+            if ([self.delegate respondsToSelector:@selector(gestureView:endedPanWithAddedX:)]) {
+                [self.delegate gestureView:self endedPanWithAddedX:addX];
+            }
         }
     }else {
         if ([self.delegate respondsToSelector:@selector(gestureView:addY:left:)]) {

@@ -6,6 +6,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13173"/>
+        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -16,7 +17,7 @@
             <rect key="frame" x="0.0" y="0.0" width="509" height="243"/>
             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
             <subviews>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xDk-vf-PKq" customClass="LPGestureView">
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xDk-vf-PKq" customClass="LPPlayGestureView">
                     <rect key="frame" x="0.0" y="0.0" width="509" height="243"/>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Jko-kH-6F4">
@@ -131,7 +132,7 @@
                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="LPPlayer_bottom_bar_bg" translatesAutoresizingMaskIntoConstraints="NO" id="1cs-ej-8LC">
                             <rect key="frame" x="0.0" y="0.0" width="509" height="45"/>
                         </imageView>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CMZ-zs-MPh" customClass="LPProgressBar">
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CMZ-zs-MPh" customClass="LPPlayProgressBar">
                             <rect key="frame" x="53" y="0.0" width="313" height="45"/>
                         </view>
                         <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JBH-gf-jEi">
@@ -205,6 +206,15 @@
                         <constraint firstItem="1cs-ej-8LC" firstAttribute="leading" secondItem="aDH-Ko-GGQ" secondAttribute="leading" id="wX4-Lp-LZO"/>
                     </constraints>
                 </view>
+                <label opaque="NO" userInteractionEnabled="NO" alpha="0.0" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="标题" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2UK-bZ-efJ" userLabel="即将播放：标题">
+                    <rect key="frame" x="10" y="168" width="244.5" height="30"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="30" id="ffG-TW-Wvm"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="10"/>
+                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <nil key="highlightedColor"/>
+                </label>
                 <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wVr-dM-Gyo">
                     <rect key="frame" x="0.0" y="20" width="45" height="40"/>
                     <constraints>
@@ -222,6 +232,7 @@
             <constraints>
                 <constraint firstItem="aDH-Ko-GGQ" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="0kY-1q-Mb4"/>
                 <constraint firstItem="xDk-vf-PKq" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="4lC-bU-pDB"/>
+                <constraint firstItem="aDH-Ko-GGQ" firstAttribute="top" secondItem="2UK-bZ-efJ" secondAttribute="bottom" id="4zu-fR-EJ8"/>
                 <constraint firstItem="Jko-kH-6F4" firstAttribute="centerY" secondItem="vUN-kp-3ea" secondAttribute="centerY" id="6dr-sN-5Cb"/>
                 <constraint firstItem="jfh-nS-H7W" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="8h1-Er-tCv"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="Jko-kH-6F4" secondAttribute="trailing" constant="15" id="CZv-2N-2ua"/>
@@ -230,7 +241,9 @@
                 <constraint firstItem="jfh-nS-H7W" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="aUB-og-hA5"/>
                 <constraint firstItem="xDk-vf-PKq" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="faW-4P-hHT"/>
                 <constraint firstItem="jfh-nS-H7W" firstAttribute="trailing" secondItem="vUN-kp-3ea" secondAttribute="trailing" id="hGD-zG-Hha"/>
+                <constraint firstItem="2UK-bZ-efJ" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="10" id="k1e-em-bSU"/>
                 <constraint firstItem="xDk-vf-PKq" firstAttribute="trailing" secondItem="vUN-kp-3ea" secondAttribute="trailing" id="lxf-fE-ttU"/>
+                <constraint firstItem="2UK-bZ-efJ" firstAttribute="width" secondItem="iN0-l3-epB" secondAttribute="width" multiplier="180:375" id="sBX-qb-eUg"/>
                 <constraint firstItem="xDk-vf-PKq" firstAttribute="bottom" secondItem="vUN-kp-3ea" secondAttribute="bottom" id="zBE-BD-lrH"/>
                 <constraint firstItem="aDH-Ko-GGQ" firstAttribute="bottom" secondItem="iN0-l3-epB" secondAttribute="bottom" id="zHg-6u-v74"/>
                 <constraint firstItem="aDH-Ko-GGQ" firstAttribute="trailing" secondItem="vUN-kp-3ea" secondAttribute="trailing" id="zaW-Gc-h1L"/>
@@ -261,8 +274,9 @@
                 <outlet property="topBarBgImgView" destination="HNm-5k-hal" id="yoU-wo-bQk"/>
                 <outlet property="topBarTopConstraint" destination="aUB-og-hA5" id="haO-gv-oQ0"/>
                 <outlet property="topBarTopMarginConstraint" destination="T4E-kM-98i" id="lJ6-TG-4Co"/>
+                <outlet property="willPlayLabel" destination="2UK-bZ-efJ" id="0Wi-OY-lZL"/>
             </connections>
-            <point key="canvasLocation" x="-3052.5" y="-1157.5"/>
+            <point key="canvasLocation" x="-3144.5" y="-1186.5"/>
         </view>
     </objects>
     <resources>

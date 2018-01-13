@@ -8,21 +8,22 @@
 
 #import <MediaPlayer/MediaPlayer.h>
 #import "LPPlayControl.h"
-#import "LPGestureView.h"
+#import "LPPlayGestureView.h"
 
 
-@interface LPPlayControl ()<LPProgressBarDelegate, LPGestureViewDelegate>
+@interface LPPlayControl ()<LPPlayProgressBarDelegate, LPPlayGestureViewDelegate>
 //手势层
-@property (weak, nonatomic) IBOutlet LPGestureView *gestureView;
+@property (weak, nonatomic) IBOutlet LPPlayGestureView *gestureView;
 //返回按钮
 @property (weak, nonatomic) IBOutlet UIButton *backButton;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *backButtonTopConstraint;
+//即将播放的视频标题
+@property (weak, nonatomic) IBOutlet UILabel *willPlayLabel;
 
 //右边控制栏
 @property (weak, nonatomic) IBOutlet UIView *rightBar;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *firstRightButtonHeightConstraint;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *secondRightButtonHeightConstraint;
-
 
 //顶部控制栏
 @property (weak, nonatomic) IBOutlet UIView *topBar;
@@ -37,13 +38,15 @@
 //底部控制栏
 @property (weak, nonatomic) IBOutlet UIView *bottomBar;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *bottomBarBottomConstraint;
-@property (weak, nonatomic) IBOutlet LPProgressBar *progressBar;
+@property (weak, nonatomic) IBOutlet LPPlayProgressBar *progressBar;
 @property (weak, nonatomic) IBOutlet UIImageView *bottomBgImgView;
 @property (weak, nonatomic) IBOutlet UIButton *playButton;
 @property (weak, nonatomic) IBOutlet UIButton *clarityButton;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *clarityButtonWidthConstraint;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *episodeButtonWidthConstraint;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *fullscreenButtonWidthConstraint;
+
+
 @end
 
 
@@ -122,6 +125,16 @@
     self.topBarTopMarginConstraint.constant = statusBarMargin?20:0;
 }
 
+//视频名称
+- (void)setTitle:(NSString *)title {
+    self.titleLabel.text = title;
+}
+
+//即将播放的视频名称
+- (void)setWillPlayTitle:(NSString *)willPlayTitle {
+    _willPlayTitle = willPlayTitle;
+    self.willPlayLabel.text = [NSString stringWithFormat:@"即将播放：%@", willPlayTitle?:@""];
+}
 
 //清晰度名称
 - (void)setClarityNames:(NSArray<NSString *> *)clarityNames {
@@ -135,6 +148,7 @@
 //选中的清晰度
 - (void)setSelectedClarityIndex:(NSInteger)selectedClarityIndex {
     _selectedClarityIndex = selectedClarityIndex;
+    if (!self.clarityNames.count) { return; }
     NSString *title = [self.clarityNames objectAtIndex:selectedClarityIndex];
     [self.clarityButton setTitle:title forState:(UIControlStateNormal)];
 }
@@ -143,8 +157,16 @@
 
 //正在播放时间（单位：秒）
 - (void)setPlayingTime:(NSTimeInterval)playingTime {
-    if (!self.gestureView.isSlidingProgress) {
-        self.progressBar.playingTime = playingTime;
+    if (self.gestureView.isSlidingProgress) { return; }
+    //进度条播放时间
+    self.progressBar.playingTime = playingTime;
+    //即将播放提示动画
+    if (_willPlayTitle && _willPlayTitle.length) {
+        if (self.willPlayLabel.alpha<=0 && self.totalTime-playingTime<10) {
+            [UIView animateWithDuration:ANIMATION_DURATION animations:^{
+                self.willPlayLabel.alpha = 1;
+            }];
+        }
     }
 }
 - (NSTimeInterval)playingTime {
@@ -186,6 +208,16 @@
 
 
 #pragma mark - ------------------------ 界面布局 --------------------------
+//MARK: 重置
+- (void)reset {
+    self.willPlayTitle = nil;
+    self.willPlayLabel.alpha = 0;
+    self.playing = NO;
+    self.playingTime = 0;
+    self.loadingTime = 0;
+    self.totalTime = 0;
+}
+
 //MARK: 全屏或竖屏模式
 - (void)becomeFullScreen:(BOOL)fullScreen {
     if (fullScreen) {
@@ -419,29 +451,33 @@
 
 
 
-#pragma mark - <LPProgressBarDelegate>协议实现
-- (void)progressBar:(LPProgressBar *)bar slidingBeganAtTime:(NSTimeInterval)time {
+#pragma mark - <LPPlayProgressBarDelegate>协议实现
+- (void)progressBar:(LPPlayProgressBar *)bar slidingBeganAtTime:(NSTimeInterval)time {
     //取消延时隐藏控制栏
     [self cancelAutoHideBar];
+    //代理回调
+    if (self.delegate && [self.delegate respondsToSelector:@selector(control:beganSeekedFromTime:)]) {
+        [self.delegate control:self beganSeekedFromTime:time];
+    }
 }
 
-- (void)progressBar:(LPProgressBar *)bar slidingMovedAtTime:(NSTimeInterval)time {
+- (void)progressBar:(LPPlayProgressBar *)bar slidingMovedAtTime:(NSTimeInterval)time {
     //显示快进后退时间
     //MARK: NeedDo <<<<<<<<<<<<<<<<<<<<<<<<< 5 >>>>>>>>>>>>>>>>>>>>>>>>>
 }
 
-- (void)progressBar:(LPProgressBar *)bar slidingEndedAtTime:(NSTimeInterval)time {
+- (void)progressBar:(LPPlayProgressBar *)bar slidingEndedAtTime:(NSTimeInterval)time {
     //延时隐藏控制栏
     [self autoHideBarIfNeed];
-    //快进、后退
+    //代理回调
     if (self.delegate && [self.delegate respondsToSelector:@selector(control:didSeekedToTime:)]) {
         [self.delegate control:self didSeekedToTime:time];
     }
 }
 
 
-#pragma mark - <LPGestureViewDelegate>协议实现
-- (void)gestureViewDidSigleTap:(LPGestureView *)view {
+#pragma mark - <LPPlayGestureViewDelegate>协议实现
+- (void)gestureViewDidSigleTap:(LPPlayGestureView *)view {
     if (_barHidden) {
         [self showBarsAnimation];
     }else {
@@ -449,36 +485,22 @@
     }
 }
 
-- (void)gestureViewDidDoubleTap:(LPGestureView *)view {
+- (void)gestureViewDidDoubleTap:(LPPlayGestureView *)view {
     //等同于点击播放按钮
     [self playButtonPressed:self.playButton];
 }
 
-- (void)gestureViewPanBegan:(LPGestureView *)view {
+- (void)gestureViewPanBegan:(LPPlayGestureView *)view {
     //取消延时隐藏控制栏
     [self cancelAutoHideBar];
 }
 
-- (void)gestureViewPanEnded:(LPGestureView *)view {
+- (void)gestureViewPanEnded:(LPPlayGestureView *)view {
     //延时隐藏控制栏
     [self autoHideBarIfNeed];
 }
 
-- (void)gestureView:(LPGestureView *)view addX:(CGFloat)x isEnd:(BOOL)isEnd {
-    //进度条调节
-    self.progressBar.playingTime += x/5.f;
-    NSLog(@"左右调节：%.0lf----  %.0lf", x, self.progressBar.playingTime);
-    //播放时间弹出层
-    //MARK: NeedDo <<<<<<<<<<<<<<<<<<<<<<<<< 6 >>>>>>>>>>>>>>>>>>>>>>>>>
-    //快进后退代理回调
-    if (isEnd) {
-        if (self.delegate && [self.delegate respondsToSelector:@selector(control:didSeekedToTime:)]) {
-            [self.delegate control:self didSeekedToTime:self.playingTime];
-        }
-    }
-}
-
-- (void)gestureView:(LPGestureView *)view addY:(CGFloat)y left:(BOOL)left {
+- (void)gestureView:(LPPlayGestureView *)view addY:(CGFloat)y left:(BOOL)left {
     CGFloat addedScale = y / (self.bounds.size.height*.62);
     if (left) {//亮度调节
         [UIScreen mainScreen].brightness += addedScale;
@@ -489,4 +511,23 @@
     }
 }
 
+- (void)gestureView:(LPPlayGestureView *)view beganPanWithAddedX:(CGFloat)x {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(control:beganSeekedFromTime:)]) {
+        [self.delegate control:self beganSeekedFromTime:self.playingTime];
+    }
+}
+
+- (void)gestureView:(LPPlayGestureView *)view movedPanWithAddedX:(CGFloat)x {
+    //进度条调节
+    self.progressBar.playingTime += x/5.f;
+    NSLog(@"左右调节：%.0lf----  %.0lf", x, self.progressBar.playingTime);
+    //播放时间弹出层
+    //MARK: NeedDo <<<<<<<<<<<<<<<<<<<<<<<<< 6 >>>>>>>>>>>>>>>>>>>>>>>>>
+}
+
+- (void)gestureView:(LPPlayGestureView *)view endedPanWithAddedX:(CGFloat)x {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(control:didSeekedToTime:)]) {
+        [self.delegate control:self didSeekedToTime:self.playingTime];
+    }
+}
 @end

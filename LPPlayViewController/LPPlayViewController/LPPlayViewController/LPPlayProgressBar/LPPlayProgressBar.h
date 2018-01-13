@@ -1,6 +1,6 @@
 //
-//  LPProgressBar.h
-//  LPProgressBar
+//  LPPlayProgressBar.h
+//  LPPlayProgressBar
 //
 //  Created by iOSLiu on 2018/1/3.
 //  Copyright © 2018年 iOS_刘平. All rights reserved.
@@ -10,21 +10,21 @@
 
 
 /** 协议 */
-@class LPProgressBar;
-@protocol LPProgressBarDelegate <NSObject>
+@class LPPlayProgressBar;
+@protocol LPPlayProgressBarDelegate <NSObject>
 @optional
 /** 用户开始手动滑动进度条时 */
-- (void)progressBar:(LPProgressBar *)bar slidingBeganAtTime:(NSTimeInterval)time;
+- (void)progressBar:(LPPlayProgressBar *)bar slidingBeganAtTime:(NSTimeInterval)time;
 /** 用户手动滑动进度条时 */
-- (void)progressBar:(LPProgressBar *)bar slidingMovedAtTime:(NSTimeInterval)time;
+- (void)progressBar:(LPPlayProgressBar *)bar slidingMovedAtTime:(NSTimeInterval)time;
 /** 用户手动滑动进度条结束 */
-- (void)progressBar:(LPProgressBar *)bar slidingEndedAtTime:(NSTimeInterval)time;
+- (void)progressBar:(LPPlayProgressBar *)bar slidingEndedAtTime:(NSTimeInterval)time;
 @end
 
 
 
 /*************** 视频播放进度条 ***************/
-@interface LPProgressBar : UIView
+@interface LPPlayProgressBar : UIView
 ///是否隐藏小时数（默认NO）
 @property (assign, nonatomic) BOOL hoursHidden;
 ///是否显示剩余时间（默认NO）
@@ -50,7 +50,7 @@
 @property (copy, nonatomic) UIImage *totalImage;
 
 ///代理
-@property (weak, nonatomic) id <LPProgressBarDelegate> delegate;
+@property (weak, nonatomic) id <LPPlayProgressBarDelegate> delegate;
 
 ///正在播放时间（单位：秒）
 @property (assign, nonatomic) NSTimeInterval playingTime;

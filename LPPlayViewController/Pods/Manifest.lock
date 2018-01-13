@@ -15,18 +15,21 @@ PODS:
   - AFNetworking/UIKit (3.1.0):
     - AFNetworking/NSURLSession
   - HappyDNS (0.3.12)
+  - JSONKit-NoWarning (1.2)
   - PLPlayerKit (3.0.1):
     - HappyDNS (~> 0.3.10)
 
 DEPENDENCIES:
   - AFNetworking (~> 3.0)
+  - JSONKit-NoWarning (~> 1.2)
   - PLPlayerKit (~> 3.0.1)
 
 SPEC CHECKSUMS:
   AFNetworking: 5e0e199f73d8626b11e79750991f5d173d1f8b67
   HappyDNS: 691a3041128055d09866f86e6e9ca90f24da1f18
+  JSONKit-NoWarning: 3d27e6f9e6846ecf741e8c64dcadd7d5aa7193cb
   PLPlayerKit: 18497c84e9453dcc26244ae346ca6eaed3ae2a90
 
-PODFILE CHECKSUM: 95d2111f3937658cb6eb3027c7ba3a79e77845b8
+PODFILE CHECKSUM: 1573c11affa9d33e2a56e41843e341fef6b23377
 
 COCOAPODS: 1.2.0
