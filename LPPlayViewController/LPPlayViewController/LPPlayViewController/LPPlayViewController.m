@@ -18,7 +18,6 @@
 @end
 
 @interface LPPlayViewController ()
-@property (strong, nonatomic, readonly) NSTimer *timer;//计时器
 @property (assign, nonatomic, readonly) UIDeviceOrientation orientation;//屏幕方向
 
 @property (assign, nonatomic, readonly) UIStatusBarStyle statusBarOriginStyle;//状态栏初始风格
@@ -95,7 +94,7 @@
     self.view.backgroundColor = [UIColor blackColor];
     
     //设备默认方向
-    _orientation = UIDeviceOrientationPortrait;
+    _orientation = [UIDevice currentDevice].orientation;;
     //状态栏初始风格
     _statusBarOriginStyle = [UIApplication sharedApplication].statusBarStyle;
     _statusBarOriginHidden = [UIApplication sharedApplication].statusBarHidden;
@@ -150,11 +149,11 @@
 
 //MARK: 播放选集
 - (void)setSelectedSetIndex:(NSInteger)selectedSetIndex {
-    if (!self.delegate) { return; }
     //总集数
     NSInteger totalSets = [self.delegate numberOfSetsInPlayController:self];
     if (selectedSetIndex > MAX(totalSets-1, 0)) { return; }
     _selectedSetIndex = selectedSetIndex;
+    if (!self.delegate) { return; }
     //清晰度名称
     self.control.clarityNames = [self.delegate claritiesInPlayController:self];
     //播放地址
@@ -171,7 +170,9 @@
 
 //MARK: 设置http header referer 值
 - (void)setReferer:(NSString *)referer {
-    self.player.referer = referer;
+    NSCharacterSet *charSet = [NSCharacterSet URLQueryAllowedCharacterSet];
+    NSString *value = [referer stringByAddingPercentEncodingWithAllowedCharacters:charSet];
+    self.player.referer = value;
 }
 
 
@@ -198,20 +199,28 @@
 //MARK: 开始监听播放时间
 - (void)startObservingPlayedTime {
     if (self.style == LPPlayStyleLive) { return; }
-    [_timer invalidate];
-    _timer = [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(updatePlayedTime) userInfo:nil repeats:YES];
+    self.control.playingTime = CMTimeGetSeconds(self.player.currentTime);
+    [self performSelector:@selector(startObservingPlayedTime) withObject:nil afterDelay:1];
 }
 
 //MARK: 停止播放时间监听
 - (void)stopObservingPlayedTime {
-    [_timer invalidate];
-    _timer = nil;
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(startObservingPlayedTime) object:nil];
 }
 
-//MARK: 刷新播放时间
-- (void)updatePlayedTime {
-    self.control.playingTime = CMTimeGetSeconds(self.player.currentTime);
+
+//MARK: 开始监听下载速度
+- (void)startObservingLoadSpeed {
+    if (self.style == LPPlayStyleLive) { return; }
+    [self.control.loader loadingWithSpeed:self.player.downSpeed];
+    [self performSelector:@selector(startObservingLoadSpeed) withObject:nil afterDelay:.5];
 }
+
+//MARK: 停止下载速度监听
+- (void)stopObservingLoadSpeed {
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(startObservingLoadSpeed) object:nil];
+}
+
 
 
 
@@ -300,6 +309,7 @@
     switch (state) {
         case PLPlayerStatusPreparing: {
             NSLog(@"状态：PLPlayerStatusPreparing");
+            [self startObservingLoadSpeed];
         }
             break;
         case PLPlayerStatusReady: {
@@ -311,16 +321,17 @@
             break;
         case PLPlayerStatusCaching: {
             NSLog(@"状态：PLPlayerStatusCaching");
+            [self startObservingLoadSpeed];;
         }
             break;
         case PLPlayerStatusPlaying: {
             NSLog(@"状态：PLPlayerStatusPlaying");
-            self.control.playing = YES;
+            [self stopObservingLoadSpeed];
+            [self.control.loader endLoading];
         }
             break;
         case PLPlayerStatusPaused: {
             NSLog(@"状态：PLPlayerStatusPaused");
-            self.control.playing = NO;
         }
             break;
         case PLPlayerStatusError: {
@@ -334,13 +345,16 @@
             break;
         case PLPlayerStatusStopped: {
             NSLog(@"状态：PLPlayerStatusStopped");
-            
+            [self stopObservingPlayedTime];
+            [self.control reset];
+            self.selectedSetIndex ++;
         }
             break;
         case PLPlayerStatusCompleted: {
             NSLog(@"状态：PLPlayerStatusCompleted");
             [self stopObservingPlayedTime];
             [self.control reset];
+            self.selectedSetIndex ++;
         }
             break;
         default:{
@@ -353,7 +367,9 @@
 
 
 - (void)player:(PLPlayer *)player stoppedWithError:(NSError *)error {
-    NSLog(@"%ld %@,%@", error.code, error.localizedDescription, error,error.localizedFailureReason);
+    NSString *meesage = [@"播放出错" stringByAppendingFormat:@"%ld", error.code];
+    [self stopObservingLoadSpeed];
+    [self.control.loader showError:meesage];
 }
 
 
@@ -375,7 +391,8 @@
 
 - (void)control:(LPPlayControl *)control didClickedFullScreenButton:(BOOL)fullScreen {
     if (fullScreen) {//全屏
-        [self becomeFullScreenToLeft:YES];
+        BOOL left = [UIDevice currentDevice].orientation != UIDeviceOrientationLandscapeRight;
+        [self becomeFullScreenToLeft:left];
     } else {//竖屏
         [self becomePortraitScreen];
     }

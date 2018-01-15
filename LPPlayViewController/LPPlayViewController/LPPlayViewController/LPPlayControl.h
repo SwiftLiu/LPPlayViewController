@@ -10,6 +10,7 @@
 #import "LPPlayControlDelegate.h"
 #import "LPPlayHeader.h"
 #import "LPPlayProgressBar.h"
+#import "LPPlayLoader.h"
 
 /*************** 播放器控制层 ***************/
 @interface LPPlayControl : UIView
@@ -39,8 +40,12 @@
 ///总时间（单位：秒）
 @property (assign, nonatomic) NSTimeInterval totalTime;
 
+//加载网速或出错指示器
+@property (weak, nonatomic) LPPlayLoader *loader;
+
 ///控制栏是否隐藏（默认为NO）
 @property (assign, nonatomic, readonly) BOOL barHidden;
+
 
 /** 初始化 */
 + (instancetype)controlViewWithStyle:(LPPlayStyle)style;

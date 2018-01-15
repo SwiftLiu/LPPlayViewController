@@ -33,6 +33,7 @@
     [self addChildViewController:pvc];
     pvc.view.frame = CGRectMake(0, 20, self.view.bounds.size.width, 220);
     [self.view addSubview:pvc.view];
+    pvc.selectedSetIndex = 1;
     pvc.referer = @"https://www.lart.org";
     pvc.delegate = self;
 }
@@ -44,32 +45,25 @@
 
 #pragma mark - <LPPlayViewControllerDelegate>协议实现
 - (NSArray<NSString *> *)claritiesInPlayController:(LPPlayViewController *)playController {
-    return nil;
+    return @[@"超清", @"高清", @"标清"];
 }
 
 - (NSString *)playController:(LPPlayViewController *)playController urlOfClarityAtIndex:(NSInteger)index inSet:(NSInteger)set {
     if (set == 0) {
-        if (index == 0) {
-            return @"http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4";
-        } else if (index == 1) {
-            return @"http://www.w3school.com.cn/example/html5/mov_bbb.mp4";
-        } else {
-            return @"https://www.w3schools.com/html/movie.mp4";
-        }
-    }
-    else {
-        if (index == 0) {
-            return self.url;
-        } else if (index == 1) {
-            return @"http://www.w3school.com.cn/example/html5/mov_bbb.mp4";
-        } else {
-            return @"https://www.w3schools.com/html/movie.mp4";
-        }
+        return @"http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4";
+    }else if (set == 1) {
+        return @"https://www.w3schools.com/html/movie.mp4";
+    }else if (set == 2) {
+        return @"http://www.w3school.com.cn/example/html5/mov_bbb.mp4";
+    }else if (set == 3) {
+        return @"http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4";
+    }else {
+        return self.url;
     }
 }
 
 - (NSInteger)numberOfSetsInPlayController:(LPPlayViewController *)playController {
-    return 2;
+    return 5;
 }
 
 - (NSString *)playController:(LPPlayViewController *)playController titleInSet:(NSInteger)set {

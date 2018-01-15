@@ -51,6 +51,7 @@
 
 
 @interface LPPlayControl ()
+//音量调节
 @property (strong, nonatomic) UISlider *volumeSlider;
 @end
 
@@ -203,6 +204,18 @@
     }
     return _volumeSlider;
 }
+
+//指示器
+- (LPPlayLoader *)loader {
+    if (!_loader) {
+        LPPlayLoader *loader = [LPPlayLoader loader];
+        loader.frame = self.bounds;
+        [self insertSubview:loader atIndex:1];
+        _loader = loader;
+    }
+    return _loader;
+}
+
 
 
 
