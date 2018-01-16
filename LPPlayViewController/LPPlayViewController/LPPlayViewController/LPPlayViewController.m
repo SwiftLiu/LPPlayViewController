@@ -19,6 +19,8 @@
 
 @interface LPPlayViewController ()
 @property (assign, nonatomic, readonly) UIDeviceOrientation orientation;//屏幕方向
+@property (assign, nonatomic, readonly) BOOL isPlayingResignFocus;//失去焦点前播放暂停状态
+@property (assign, nonatomic, readonly) BOOL isAutoFullScreenResignFocus;//失去焦点前是否自动全屏模式
 
 @property (assign, nonatomic, readonly) UIStatusBarStyle statusBarOriginStyle;//状态栏初始风格
 @property (assign, nonatomic, readonly) BOOL statusBarOriginHidden;//状态栏初始状态
@@ -85,6 +87,10 @@
     | UIViewAutoresizingFlexibleWidth
     | UIViewAutoresizingFlexibleHeight;
     [self.control insertSubview:playerView atIndex:0];
+    
+    //防止打开静音按钮后播放无声音的BUG
+    AVAudioSession *audioSession = [AVAudioSession sharedInstance];
+    [audioSession setCategory:AVAudioSessionCategoryPlayback error:nil];
 }
 
 
@@ -100,6 +106,11 @@
     _statusBarOriginHidden = [UIApplication sharedApplication].statusBarHidden;
     //屏幕初始亮度
     _screenOriginBrightness = [UIScreen mainScreen].brightness;
+    
+    // app成为焦点
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(becomeFocusController) name:UIApplicationDidBecomeActiveNotification object:nil];
+    // app失去焦点
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(resignFocusController) name:UIApplicationWillResignActiveNotification object:nil];
 }
 
 - (void)viewDidLayoutSubviews {
@@ -108,6 +119,30 @@
     self.player.playerView.frame = self.control.bounds;
 }
 
+
+#pragma mark - ------------------------ 焦点切换 --------------------------
+//MARK: 本页面成为焦点
+- (void)becomeFocusController {
+    if (self.isPlayingResignFocus) {
+        [self.player resume];
+        self.control.playing = YES;
+    }
+    
+    if (self.isPlayingResignFocus) {
+        self.autoFullScreen = YES;
+    }
+}
+
+
+//MARK: 本页面失去焦点
+- (void)resignFocusController {
+    _isPlayingResignFocus = self.player.isPlaying;
+    [self.player pause];
+    self.control.playing = NO;
+    
+    _isAutoFullScreenResignFocus = self.autoFullScreen;
+    self.autoFullScreen = NO;
+}
 
 
 
@@ -136,7 +171,6 @@
         //停止监测设备方向
         [[UIDevice currentDevice] endGeneratingDeviceOrientationNotifications];
         [[NSNotificationCenter defaultCenter] removeObserver:self name:UIDeviceOrientationDidChangeNotification object:nil];
-        [self becomePortraitScreen];
     }
 }
 
@@ -175,51 +209,6 @@
     self.player.referer = value;
 }
 
-
-
-
-
-#pragma mark - ------------------------ 播放器 --------------------------
-//MARK: 播放新视频
-- (void)playUrlAtSet:(NSInteger)set {
-    NSInteger index = self.control.selectedClarityIndex;
-    index = MIN(index, self.control.clarityNames.count-1);
-    index = MAX(index, 0);
-    NSString *url = [self.delegate playController:self urlOfClarityAtIndex:index inSet:set];
-    //encode解码
-    url = [url stringByRemovingPercentEncoding];
-    url = [url stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
-    if ([_url isEqualToString:url]) { return; }
-    _url = url;
-    NSURL *URL = [NSURL URLWithString:url?:@""];
-    //播放
-    [self.player playWithURL:URL sameSource:NO];
-}
-
-//MARK: 开始监听播放时间
-- (void)startObservingPlayedTime {
-    if (self.style == LPPlayStyleLive) { return; }
-    self.control.playingTime = CMTimeGetSeconds(self.player.currentTime);
-    [self performSelector:@selector(startObservingPlayedTime) withObject:nil afterDelay:1];
-}
-
-//MARK: 停止播放时间监听
-- (void)stopObservingPlayedTime {
-    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(startObservingPlayedTime) object:nil];
-}
-
-
-//MARK: 开始监听下载速度
-- (void)startObservingLoadSpeed {
-    if (self.style == LPPlayStyleLive) { return; }
-    [self.control.loader loadingWithSpeed:self.player.downSpeed];
-    [self performSelector:@selector(startObservingLoadSpeed) withObject:nil afterDelay:.5];
-}
-
-//MARK: 停止下载速度监听
-- (void)stopObservingLoadSpeed {
-    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(startObservingLoadSpeed) object:nil];
-}
 
 
 
@@ -304,6 +293,51 @@
 
 
 
+#pragma mark - ------------------------ 播放器 --------------------------
+//MARK: 播放新视频
+- (void)playUrlAtSet:(NSInteger)set {
+    NSInteger index = self.control.selectedClarityIndex;
+    index = MIN(index, self.control.clarityNames.count-1);
+    index = MAX(index, 0);
+    NSString *url = [self.delegate playController:self urlOfClarityAtIndex:index inSet:set];
+    //encode解码
+    url = [url stringByRemovingPercentEncoding];
+    url = [url stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
+    if ([_url isEqualToString:url]) { return; }
+    _url = url;
+    NSURL *URL = [NSURL URLWithString:url?:@""];
+    //播放
+    [self.player playWithURL:URL sameSource:NO];
+}
+
+//MARK: 开始监听播放时间
+- (void)startObservingPlayedTime {
+    if (self.style == LPPlayStyleLive) { return; }
+    self.control.playingTime = CMTimeGetSeconds(self.player.currentTime);
+    [self performSelector:@selector(startObservingPlayedTime) withObject:nil afterDelay:.5];
+}
+
+//MARK: 停止播放时间监听
+- (void)stopObservingPlayedTime {
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(startObservingPlayedTime) object:nil];
+}
+
+
+//MARK: 开始监听下载速度
+- (void)startObservingLoadSpeed {
+    if (self.style == LPPlayStyleLive) { return; }
+    [self.control.loader loadingWithSpeed:self.player.downSpeed];
+    [self performSelector:@selector(startObservingLoadSpeed) withObject:nil afterDelay:.5];
+}
+
+//MARK: 停止下载速度监听
+- (void)stopObservingLoadSpeed {
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(startObservingLoadSpeed) object:nil];
+}
+
+
+
+
 #pragma mark - <PLPlayerDelegate>协议实现
 - (void)player:(PLPlayer *)player statusDidChange:(PLPlayerStatus)state {
     switch (state) {
@@ -326,12 +360,14 @@
             break;
         case PLPlayerStatusPlaying: {
             NSLog(@"状态：PLPlayerStatusPlaying");
+            self.control.playing = YES;
             [self stopObservingLoadSpeed];
             [self.control.loader endLoading];
         }
             break;
         case PLPlayerStatusPaused: {
             NSLog(@"状态：PLPlayerStatusPaused");
+            [self stopObservingPlayedTime];
         }
             break;
         case PLPlayerStatusError: {
@@ -364,13 +400,12 @@
     }
 }
 
-
-
 - (void)player:(PLPlayer *)player stoppedWithError:(NSError *)error {
-    NSString *meesage = [@"播放出错" stringByAppendingFormat:@"%ld", error.code];
+    NSString *meesage = [@"播放出错" stringByAppendingFormat:@" %ld", error.code];
     [self stopObservingLoadSpeed];
     [self.control.loader showError:meesage];
 }
+
 
 
 
@@ -428,3 +463,4 @@
 }
 
 @end
+

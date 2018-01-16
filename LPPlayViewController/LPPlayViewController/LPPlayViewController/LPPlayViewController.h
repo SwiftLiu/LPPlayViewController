@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "LPPlayHeader.h"
+#import <AVFoundation/AVFoundation.h>
 
 
 /** 代理 */
@@ -58,3 +59,4 @@
 /** 刷新播放器 */
 - (void)reloadData;
 @end
+
