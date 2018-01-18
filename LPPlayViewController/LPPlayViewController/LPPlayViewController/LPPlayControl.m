@@ -19,6 +19,7 @@
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *backButtonTopConstraint;
 //即将播放的视频标题
 @property (weak, nonatomic) IBOutlet UILabel *willPlayLabel;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *willPlayLabelTopConstraint;
 
 //右边控制栏
 @property (weak, nonatomic) IBOutlet UIView *rightBar;
@@ -133,8 +134,27 @@
 
 //即将播放的视频名称
 - (void)setWillPlayTitle:(NSString *)willPlayTitle {
+    if (_willPlayTitle==nil && willPlayTitle==nil) { return; }
     _willPlayTitle = willPlayTitle;
     self.willPlayLabel.text = [NSString stringWithFormat:@"即将播放：%@", willPlayTitle?:@""];
+    //提示即将播放
+    if (_willPlayTitle && _willPlayTitle.length) {
+        if (self.fullScreen) {
+            [self hideBarsAnimation];//全屏模式下隐藏控制栏
+        }
+        //动画
+        self.willPlayLabelTopConstraint.constant = (self.statusBarMargin || self.fullScreen) ? 20 : 0;
+        [UIView animateWithDuration:ANIMATION_DURATION animations:^{
+            [self layoutIfNeeded];
+        }];
+    }
+    //隐藏即将播放
+    else {
+        self.willPlayLabelTopConstraint.constant = -self.willPlayLabel.bounds.size.height;
+        [UIView animateWithDuration:ANIMATION_DURATION animations:^{
+            [self layoutIfNeeded];
+        }];
+    }
 }
 
 //清晰度名称
@@ -161,14 +181,6 @@
     if (self.gestureView.isSlidingProgress) { return; }
     //进度条播放时间
     self.progressBar.playingTime = playingTime;
-    //即将播放提示动画
-    if (_willPlayTitle && _willPlayTitle.length) {
-        if (self.willPlayLabel.alpha<=0 && self.totalTime-playingTime<10) {
-            [UIView animateWithDuration:ANIMATION_DURATION animations:^{
-                self.willPlayLabel.alpha = 1;
-            }];
-        }
-    }
 }
 - (NSTimeInterval)playingTime {
     return self.progressBar.playingTime;
@@ -228,7 +240,6 @@
     self.playing = NO;
     self.playingTime = 0;
     self.loadingTime = 0;
-    self.totalTime = 0;
 }
 
 //MARK: 全屏或竖屏模式
@@ -237,11 +248,9 @@
         //全屏布局
         self.backButton.hidden = YES;
         self.rightBar.hidden = NO;
-        self.topBarBgImgView.hidden = NO;
         self.topBackButton.hidden = NO;
         self.titleLabel.hidden = NO;
         self.secondTopButton.hidden = NO;
-        self.bottomBgImgView.hidden = NO;
         self.topBarTopMarginConstraint.constant = 20;
         self.clarityButtonWidthConstraint.constant = self.clarityNames.count?LPPLAYER_WIDTH:0;
         self.episodeButtonWidthConstraint.constant = LPPLAYER_WIDTH;
@@ -251,11 +260,9 @@
         //竖屏布局
         self.backButton.hidden = NO;
         self.rightBar.hidden = YES;
-        self.topBarBgImgView.hidden = YES;
         self.topBackButton.hidden = YES;
         self.titleLabel.hidden = YES;
         self.secondTopButton.hidden = YES;
-        self.bottomBgImgView.hidden = YES;
         self.topBarTopMarginConstraint.constant = self.statusBarMargin?20:0;
         self.clarityButtonWidthConstraint.constant = 0;
         self.episodeButtonWidthConstraint.constant = 0;

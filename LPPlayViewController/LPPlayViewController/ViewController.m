@@ -11,7 +11,7 @@
 #import "BasicNetwork.h"
 
 @interface ViewController ()<LPPlayViewControllerDelegate>
-@property (copy, nonatomic) NSString *url;
+@property (strong, nonatomic) NSMutableArray *urls;
 @end
 
 @implementation ViewController
@@ -19,19 +19,18 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    __weak typeof(self) weakSelf = self;
-    NSString *url = @"https://api.lart.org/course/detail";
-    NSDictionary *param = @{@"customerId":@"", @"courseId":@"14933647653134"};
-    [BasicNetwork getDataFromURL:url token:nil userId:nil param:param succeedBlock:^(NSDictionary *result, NSString *token) {
-        weakSelf.url = [result objectForKey:@"previewVideo"];
-        [weakSelf initPlayer];
-    } failedBlock:nil];
+    self.urls = [NSMutableArray array];
+    [self.urls addObject:@"https://video1.lart.org/Fabien_Danesi-E.A.A.C.A-preview-720.mp4"];
+    [self.urls addObject:@"https://video1.lart.org/Federico_Muelas-I.A.I.D.A-preview-720.mp4"];
+    [self.urls addObject:@"https://video1.lart.org/Jonathan_Miles-T.F.O.M-preview-720.mp4"];
+    [self.urls addObject:@"https://video1.lart.org/Svetlana_Kuleshova-I.T.S-preview-720.mp4"];
+    [self initPlayer];
 }
 
 - (void)initPlayer {
     LPPlayViewController *pvc = [LPPlayViewController playControllerWithStyle:(LPPlayStyleNormal)];
     [self addChildViewController:pvc];
-    pvc.view.frame = CGRectMake(0, 20, self.view.bounds.size.width, 220);
+    pvc.view.frame = CGRectMake(0, 20, self.view.bounds.size.width, 210);
     [self.view addSubview:pvc.view];
     pvc.selectedSetIndex = 1;
     pvc.referer = @"https://www.lart.org";
@@ -49,21 +48,11 @@
 }
 
 - (NSString *)playController:(LPPlayViewController *)playController urlOfClarityAtIndex:(NSInteger)index inSet:(NSInteger)set {
-    if (set == 0) {
-        return @"http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4";
-    }else if (set == 1) {
-        return @"https://www.w3schools.com/html/movie.mp4";
-    }else if (set == 2) {
-        return @"http://www.w3school.com.cn/example/html5/mov_bbb.mp4";
-    }else if (set == 3) {
-        return @"http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4";
-    }else {
-        return self.url;
-    }
+    return [self.urls objectAtIndex:set];
 }
 
 - (NSInteger)numberOfSetsInPlayController:(LPPlayViewController *)playController {
-    return 5;
+    return self.urls.count;
 }
 
 - (NSString *)playController:(LPPlayViewController *)playController titleInSet:(NSInteger)set {

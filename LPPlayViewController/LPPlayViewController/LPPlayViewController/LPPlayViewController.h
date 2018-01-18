@@ -28,6 +28,8 @@
 @optional
 /** 点击返回按钮时 */
 - (void)playControllerDidClickedBackButton:(LPPlayViewController *)playController;
+/** 最后一集播放完成时 */
+- (void)playControllerDidPlayCompletedLastestSet:(LPPlayViewController *)playController;
 @end
 
 

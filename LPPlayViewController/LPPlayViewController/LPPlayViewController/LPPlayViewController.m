@@ -128,7 +128,7 @@
         self.control.playing = YES;
     }
     
-    if (self.isPlayingResignFocus) {
+    if (self.isAutoFullScreenResignFocus) {
         self.autoFullScreen = YES;
     }
 }
@@ -137,8 +137,9 @@
 //MARK: 本页面失去焦点
 - (void)resignFocusController {
     _isPlayingResignFocus = self.player.isPlaying;
-    [self.player pause];
-    self.control.playing = NO;
+    if (_isPlayingResignFocus) {
+        [self.player pause];//注：连续调用pause会使播放器状态变为stopped
+    }
     
     _isAutoFullScreenResignFocus = self.autoFullScreen;
     self.autoFullScreen = NO;
@@ -206,7 +207,7 @@
 - (void)setReferer:(NSString *)referer {
     NSCharacterSet *charSet = [NSCharacterSet URLQueryAllowedCharacterSet];
     NSString *value = [referer stringByAddingPercentEncodingWithAllowedCharacters:charSet];
-    self.player.referer = value;
+    self.player.referer = [@"Referer:" stringByAppendingString:value];
 }
 
 
@@ -343,30 +344,32 @@
     switch (state) {
         case PLPlayerStatusPreparing: {
             NSLog(@"状态：PLPlayerStatusPreparing");
-            [self startObservingLoadSpeed];
         }
             break;
         case PLPlayerStatusReady: {
             NSLog(@"状态：PLPlayerStatusReady");
             CMTime time = self.player.totalDuration;
             self.control.totalTime = CMTimeGetSeconds(time);
-            [self startObservingPlayedTime];
         }
             break;
         case PLPlayerStatusCaching: {
             NSLog(@"状态：PLPlayerStatusCaching");
-            [self startObservingLoadSpeed];;
+            [self stopObservingPlayedTime];
+            [self startObservingLoadSpeed];
         }
             break;
         case PLPlayerStatusPlaying: {
             NSLog(@"状态：PLPlayerStatusPlaying");
+            self.control.willPlayTitle = nil;
             self.control.playing = YES;
-            [self stopObservingLoadSpeed];
+            [self startObservingPlayedTime];
             [self.control.loader endLoading];
+            [self stopObservingLoadSpeed];
         }
             break;
         case PLPlayerStatusPaused: {
             NSLog(@"状态：PLPlayerStatusPaused");
+            self.control.playing = NO;
             [self stopObservingPlayedTime];
         }
             break;
@@ -382,15 +385,22 @@
         case PLPlayerStatusStopped: {
             NSLog(@"状态：PLPlayerStatusStopped");
             [self stopObservingPlayedTime];
-            [self.control reset];
-            self.selectedSetIndex ++;
         }
             break;
         case PLPlayerStatusCompleted: {
             NSLog(@"状态：PLPlayerStatusCompleted");
             [self stopObservingPlayedTime];
             [self.control reset];
-            self.selectedSetIndex ++;
+            self.control.totalTime = 0;
+            NSInteger totalSets = [self.delegate numberOfSetsInPlayController:self];
+            if (self.selectedSetIndex+1 >= totalSets) {
+                //回调
+                if (self.delegate && [self.delegate respondsToSelector:@selector(playControllerDidPlayCompletedLastestSet:)]) {
+                    [self.delegate playControllerDidPlayCompletedLastestSet:self];
+                }
+            }else {
+                self.selectedSetIndex ++;
+            }
         }
             break;
         default:{
@@ -402,6 +412,7 @@
 
 - (void)player:(PLPlayer *)player stoppedWithError:(NSError *)error {
     NSString *meesage = [@"播放出错" stringByAppendingFormat:@" %ld", error.code];
+    [self stopObservingPlayedTime];
     [self stopObservingLoadSpeed];
     [self.control.loader showError:meesage];
 }
@@ -446,7 +457,6 @@
 - (void)control:(LPPlayControl *)control didClickedPlayButtonWillPlaying:(BOOL)playing {
     if (playing) {
         [self.player resume];
-        [self startObservingPlayedTime];
     }else {
         [self.player pause];
         [self stopObservingPlayedTime];
@@ -458,8 +468,7 @@
 }
 
 - (void)control:(LPPlayControl *)control didSeekedToTime:(NSTimeInterval)time {
-    [self.player seekTo:CMTimeMake(time+.9999, 1)];
-    [self startObservingPlayedTime];
+    [self.player seekTo:CMTimeMake(time, 1)];
 }
 
 @end
